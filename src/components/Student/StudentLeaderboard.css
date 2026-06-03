@@ -1,0 +1,546 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@500;700;900&family=Cairo:wght@400;600;700;900&display=swap');
+
+/* ══════════════════════════════════════════════════
+   STUDENT LEADERBOARD
+   Scoped to .student-leaderboard-page · Zero global leaks
+   Matches StudentDashboard visual language
+══════════════════════════════════════════════════ */
+
+.student-leaderboard-page *,
+.student-leaderboard-page *::before,
+.student-leaderboard-page *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+
+.student-leaderboard-page {
+  --bg-dark:     #0d1117;
+  --bg-card:     #161b22;
+  --bg-elevated: #1c2128;
+  --purple: #a371f7;
+  --green:  #3fb950;
+  --blue:   #58a6ff;
+  --orange: #f78166;
+  --gold:   #fbbf24;
+  --silver: #d1d5db;
+  --bronze: #f97316;
+  --text-1: #f0f6fc;
+  --text-2: #8b949e;
+  --text-3: #6e7681;
+  --border: #30363d;
+  --shadow: 0 4px 16px rgba(0,0,0,.5);
+  --font-h: 'Exo 2', 'Cairo', sans-serif;
+  --font-b: 'Cairo', sans-serif;
+  --header-h: 58px;
+  --coins-h:  90px;
+  --r-card: 14px;
+  --r-pill: 50px;
+
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #000 100%);
+  font-family: var(--font-b);
+  direction: rtl;
+  color: var(--text-1);
+  overflow-x: hidden;
+  position: relative;
+  padding-bottom: calc(var(--nav-h, 72px) + 1rem);
+}
+
+/* ── Stars — same as Dashboard ── */
+.student-leaderboard-page .slb-stars {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.student-leaderboard-page .slb-stars::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 10% 15%, rgba(251,191,36,.9), transparent),
+    radial-gradient(1.5px 1.5px at 25% 40%, rgba(255,255,255,.8), transparent),
+    radial-gradient(2px 2px at 40% 8%, rgba(251,191,36,.7), transparent),
+    radial-gradient(1px 1px at 55% 55%, rgba(255,255,255,.9), transparent),
+    radial-gradient(1.5px 1.5px at 70% 20%, rgba(251,191,36,.8), transparent),
+    radial-gradient(2px 2px at 82% 65%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1px 1px at 90% 35%, rgba(251,191,36,.9), transparent),
+    radial-gradient(1.5px 1.5px at 15% 75%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1px 1px at 35% 88%, rgba(251,191,36,.7), transparent),
+    radial-gradient(2px 2px at 60% 80%, rgba(255,255,255,.8), transparent),
+    radial-gradient(1.5px 1.5px at 78% 90%, rgba(251,191,36,.6), transparent),
+    radial-gradient(1px 1px at 95% 10%, rgba(255,255,255,.9), transparent),
+    radial-gradient(1.5px 1.5px at 5% 50%, rgba(251,191,36,.7), transparent),
+    radial-gradient(1px 1px at 48% 30%, rgba(255,255,255,.8), transparent),
+    radial-gradient(2px 2px at 20% 95%, rgba(251,191,36,.5), transparent);
+  background-size: 100% 100%;
+  animation: slb-twinkle1 4s ease-in-out infinite;
+}
+.student-leaderboard-page .slb-stars::after {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 8% 28%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1.5px 1.5px at 22% 60%, rgba(251,191,36,.8), transparent),
+    radial-gradient(1px 1px at 38% 18%, rgba(255,255,255,.6), transparent),
+    radial-gradient(2px 2px at 52% 70%, rgba(251,191,36,.9), transparent),
+    radial-gradient(1px 1px at 65% 45%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1.5px 1.5px at 75% 12%, rgba(251,191,36,.6), transparent),
+    radial-gradient(1px 1px at 88% 82%, rgba(255,255,255,.8), transparent),
+    radial-gradient(2px 2px at 30% 72%, rgba(251,191,36,.7), transparent),
+    radial-gradient(1px 1px at 45% 95%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1.5px 1.5px at 62% 5%, rgba(251,191,36,.8), transparent),
+    radial-gradient(1px 1px at 92% 55%, rgba(255,255,255,.9), transparent),
+    radial-gradient(2px 2px at 18% 85%, rgba(251,191,36,.6), transparent);
+  background-size: 100% 100%;
+  animation: slb-twinkle2 6s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+/* ── keyframes ── */
+@keyframes slb-twinkle1 { 0%,100%{opacity:.25;transform:scale(1)} 33%{opacity:.9;transform:scale(1.05)} 66%{opacity:.4;transform:scale(.98)} }
+@keyframes slb-twinkle2 { 0%,100%{opacity:.35;transform:scale(1)} 50%{opacity:1;transform:scale(1.03)} }
+@keyframes slb-spin     { to{transform:rotate(360deg)} }
+@keyframes slb-float    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes slb-slidein  { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes slb-shimmer  { 0%{left:-60%} 100%{left:130%} }
+@keyframes slb-pop      { 0%{transform:scale(1)} 50%{transform:scale(1.14)} 100%{transform:scale(1)} }
+@keyframes slb-fade     { from{opacity:0} to{opacity:1} }
+@keyframes slb-glow     { 0%,100%{filter:drop-shadow(0 2px 8px rgba(251,191,36,.4))} 50%{filter:drop-shadow(0 2px 18px rgba(251,191,36,.9))} }
+
+/* ══ LOADING / ERROR ══ */
+.student-leaderboard-page .slb-loading-screen,
+.student-leaderboard-page .slb-error-screen {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1.5rem; text-align: center; padding: 1rem;
+}
+.student-leaderboard-page .slb-logo-loader {
+  position: relative; width: 80px; height: 80px;
+  display: flex; align-items: center; justify-content: center;
+}
+.student-leaderboard-page .slb-logo-icon {
+  font-size: 3rem; position: relative; z-index: 1;
+  filter: drop-shadow(0 4px 20px rgba(163,113,247,.6));
+  animation: slb-float 3s ease-in-out infinite;
+}
+.student-leaderboard-page .slb-logo-spinner {
+  position: absolute; width: 80px; height: 80px;
+  border: 3px solid transparent; border-top-color: var(--purple);
+  border-radius: 50%; animation: slb-spin 1.5s linear infinite;
+}
+.student-leaderboard-page .slb-loading-text { font-size: 1rem; font-weight: 600; color: var(--text-1); }
+.student-leaderboard-page .slb-error-icon   { font-size: 3rem; }
+.student-leaderboard-page .slb-error-screen p { font-size: .95rem; color: var(--text-2); }
+.student-leaderboard-page .slb-btn-primary {
+  background: linear-gradient(135deg, #a371f7, #7c3aed); color: #fff; border: none;
+  padding: .7rem 1.4rem; border-radius: 10px; font-size: .9rem; font-weight: 700;
+  cursor: pointer; margin-top: .5rem; font-family: var(--font-b); transition: all .2s;
+  box-shadow: 0 4px 12px rgba(163,113,247,.3);
+}
+.student-leaderboard-page .slb-btn-primary:active { transform: scale(.96); }
+
+/* ══ HEADER — fixed, same as Dashboard ══ */
+.student-leaderboard-page .slb-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--header-h);
+  background: linear-gradient(135deg, rgba(13,17,23,.97) 0%, rgba(22,27,34,.97) 50%, rgba(13,17,23,.97) 100%);
+  box-shadow: 0 1px 0 rgba(163,113,247,.3), 0 4px 24px rgba(0,0,0,.8);
+  backdrop-filter: blur(20px);
+  display: flex; align-items: center;
+}
+/* gradient line — same as Dashboard */
+.student-leaderboard-page .slb-header::after {
+  content: ''; position: absolute; bottom: 0; left: 5%; right: 5%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(163,113,247,.6) 20%, rgba(251,191,36,.8) 50%, rgba(163,113,247,.6) 80%, transparent);
+  box-shadow: 0 0 12px rgba(251,191,36,.4), 0 0 24px rgba(163,113,247,.3);
+}
+.student-leaderboard-page .slb-header-row {
+  width: 100%; padding: 0 1rem;
+  display: flex; align-items: center; justify-content: space-between; gap: .5rem;
+}
+.student-leaderboard-page .slb-header-center {
+  flex: 1; display: flex; justify-content: center;
+}
+/* ── title — large animated glow ── */
+.student-leaderboard-page .slb-header-title {
+  font-family: var(--font-h); font-size: 1.45rem; font-weight: 900;
+  background: linear-gradient(135deg, #fff8e1 0%, #fbbf24 35%, #f59e0b 60%, #a371f7 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: slb-title-glow 3s ease-in-out infinite;
+  letter-spacing: 1px; white-space: nowrap;
+}
+@keyframes slb-title-glow {
+  0%,100% { filter: drop-shadow(0 0 8px rgba(251,191,36,.4)) drop-shadow(0 0 16px rgba(251,191,36,.2)); }
+  50%     { filter: drop-shadow(0 0 16px rgba(251,191,36,.9)) drop-shadow(0 0 32px rgba(251,191,36,.5)) drop-shadow(0 0 48px rgba(163,113,247,.3)); }
+}
+
+/* ── action buttons — same as Dashboard ── */
+.student-leaderboard-page .slb-back-btn,
+.student-leaderboard-page .slb-refresh-btn {
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px; font-size: 1.2rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all .2s; color: var(--text-1);
+  box-shadow: 0 2px 8px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.06);
+  flex-shrink: 0;
+}
+.student-leaderboard-page .slb-back-btn:hover,
+.student-leaderboard-page .slb-refresh-btn:hover {
+  background: rgba(163,113,247,.12); border-color: rgba(163,113,247,.3);
+  box-shadow: 0 0 16px rgba(163,113,247,.2); transform: translateY(-1px);
+}
+.student-leaderboard-page .slb-back-btn:active,
+.student-leaderboard-page .slb-refresh-btn:active { transform: scale(.95); }
+.student-leaderboard-page .slb-refresh-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.student-leaderboard-page .slb-refresh-btn.spinning span {
+  display: inline-block; animation: slb-spin 1s linear infinite;
+}
+
+/* ══ COINS STRIP — exact match to Dashboard coins-card-large ══ */
+.student-leaderboard-page .slb-coins-strip {
+  position: fixed; top: var(--header-h); left: 0; right: 0; z-index: 150;
+  height: var(--coins-h);
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  border-top: 3px solid var(--gold);
+  box-shadow: 0 4px 24px rgba(0,0,0,.6), 0 0 0 0 rgba(251,191,36,.1);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; gap: 1rem;
+  overflow: hidden;
+}
+.student-leaderboard-page .slb-coins-strip::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 100% at 85% 50%, rgba(251,191,36,.08), transparent 70%);
+  pointer-events: none;
+}
+/* shimmer line at top */
+.student-leaderboard-page .slb-coins-strip::after {
+  content: ''; position: absolute; top: 3px; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(251,191,36,.5) 50%, transparent);
+  pointer-events: none;
+}
+.student-leaderboard-page .slb-coins-strip-inner {
+  display: flex; flex-direction: column; gap: .1rem; position: relative; z-index: 1;
+}
+.student-leaderboard-page .slb-coins-strip-label {
+  font-size: .72rem; font-weight: 700; color: var(--text-2);
+  letter-spacing: .6px; text-transform: uppercase;
+}
+.student-leaderboard-page .slb-coins-strip-value {
+  display: flex; align-items: center; gap: .6rem;
+}
+.student-leaderboard-page .slb-coin-icon-large {
+  font-size: 2.4rem;
+  filter: drop-shadow(0 2px 12px rgba(251,191,36,.8));
+  animation: slb-coin-float 3s ease-in-out infinite;
+}
+@keyframes slb-coin-float {
+  0%,100% { transform: translateY(0) rotate(-3deg); filter: drop-shadow(0 2px 8px rgba(251,191,36,.6)); }
+  50%     { transform: translateY(-4px) rotate(3deg); filter: drop-shadow(0 6px 18px rgba(251,191,36,.95)); }
+}
+.student-leaderboard-page .slb-coin-number {
+  font-family: var(--font-h); font-size: 2.6rem; font-weight: 900; line-height: 1;
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(251,191,36,.6), 0 0 40px rgba(251,191,36,.3);
+  position: relative; overflow: hidden;
+}
+/* shimmer sweep on coin number */
+.student-leaderboard-page .slb-coin-number::after {
+  content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+  animation: slb-shimmer 3s ease-in-out infinite;
+}
+/* rank pill */
+.student-leaderboard-page .slb-rank-pill {
+  background: rgba(251,191,36,.12); border: 1px solid rgba(251,191,36,.35);
+  color: var(--gold); padding: .45rem 1rem; border-radius: var(--r-pill);
+  font-size: .85rem; font-weight: 700; white-space: nowrap;
+  display: flex; align-items: center; gap: .4rem;
+  position: relative; z-index: 1;
+  box-shadow: 0 0 12px rgba(251,191,36,.15), inset 0 1px 0 rgba(251,191,36,.1);
+}
+
+/* ══ CONTAINER ══ */
+.student-leaderboard-page .slb-container {
+  padding: 1rem;
+  padding-top: calc(var(--header-h) + var(--coins-h) + 1rem);
+  position: relative; z-index: 1;
+  animation: slb-slidein .35s ease;
+}
+
+/* ── gap card ── */
+.student-leaderboard-page .slb-gap-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-card); padding: .65rem 1rem;
+  margin-bottom: .85rem; display: flex; justify-content: space-between; align-items: center;
+  box-shadow: var(--shadow);
+}
+.student-leaderboard-page .slb-gap-label { font-size: .8rem; color: var(--text-2); }
+.student-leaderboard-page .slb-gap-value { font-size: .95rem; font-weight: 700; color: var(--gold); }
+
+/* ══ PODIUM ══ */
+.student-leaderboard-page .slb-podium {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-card); padding: 1rem; margin-bottom: .85rem;
+  box-shadow: var(--shadow);
+}
+.student-leaderboard-page .slb-podium-header {
+  text-align: center; margin-bottom: .85rem; padding-bottom: .65rem;
+  border-bottom: 1px solid var(--border);
+}
+.student-leaderboard-page .slb-podium-header h2 {
+  font-family: var(--font-h); font-size: 1rem; font-weight: 700; color: var(--text-1);
+}
+.student-leaderboard-page .slb-podium-item {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: 10px; padding: .85rem;
+  margin-bottom: .55rem; display: flex; align-items: center; gap: .7rem;
+  position: relative; transition: transform .2s;
+}
+.student-leaderboard-page .slb-podium-item:last-child { margin-bottom: 0; }
+.student-leaderboard-page .slb-podium-item:active { transform: scale(.98); }
+.student-leaderboard-page .slb-podium-item.gold   { border-color: var(--gold);   background: linear-gradient(135deg, rgba(251,191,36,.12), rgba(245,158,11,.04)); box-shadow: 0 0 14px rgba(251,191,36,.12); }
+.student-leaderboard-page .slb-podium-item.silver { border-color: var(--silver); background: linear-gradient(135deg, rgba(209,213,219,.1),  rgba(156,163,175,.03)); }
+.student-leaderboard-page .slb-podium-item.bronze { border-color: var(--bronze); background: linear-gradient(135deg, rgba(249,115,22,.12),  rgba(234,88,12,.04)); }
+.student-leaderboard-page .slb-podium-item.is-me  { border-color: var(--purple); box-shadow: 0 0 14px rgba(163,113,247,.22); }
+.student-leaderboard-page .slb-winner-badge {
+  position: absolute; top: -10px; right: -8px;
+  background: var(--gold); color: #0d1117;
+  padding: .18rem .5rem; border-radius: 6px; font-size: .7rem; font-weight: 900;
+}
+.student-leaderboard-page .slb-podium-medal { font-size: 2.2rem; line-height: 1; flex-shrink: 0; }
+.student-leaderboard-page .slb-podium-item.compact .slb-podium-medal { font-size: 1.8rem; }
+.student-leaderboard-page .slb-podium-info { flex: 1; min-width: 0; }
+.student-leaderboard-page .slb-podium-info h3 {
+  font-family: var(--font-h); font-size: .92rem; font-weight: 700;
+  color: var(--text-1); margin-bottom: .3rem;
+  display: flex; align-items: center; gap: .4rem; flex-wrap: wrap;
+}
+.student-leaderboard-page .slb-podium-item.compact .slb-podium-info h3 { font-size: .85rem; }
+.student-leaderboard-page .slb-you-tag {
+  background: var(--purple); color: #fff;
+  padding: .1rem .35rem; border-radius: 4px; font-size: .6rem; font-weight: 700;
+}
+.student-leaderboard-page .slb-podium-stats { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; }
+.student-leaderboard-page .slb-coins { font-size: .95rem; font-weight: 700; color: var(--gold); }
+.student-leaderboard-page .slb-podium-item.compact .slb-coins { font-size: .88rem; }
+.student-leaderboard-page .slb-level {
+  background: rgba(63,185,80,.14); border: 1px solid var(--green);
+  color: var(--green); padding: .1rem .4rem; border-radius: var(--r-pill); font-size: .7rem; font-weight: 600;
+}
+.student-leaderboard-page .slb-podium-row { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; }
+.student-leaderboard-page .slb-podium-row .slb-podium-item { margin-bottom: 0; padding: .65rem; }
+
+/* ══ LIST HEADER ══ */
+.student-leaderboard-page .slb-list-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin: .85rem 0 .7rem; padding-bottom: .55rem;
+  border-bottom: 1px solid var(--border);
+}
+.student-leaderboard-page .slb-list-header h2 {
+  font-family: var(--font-h); font-size: .95rem; font-weight: 700; color: var(--text-1);
+}
+.student-leaderboard-page .slb-list-controls { display: flex; align-items: center; gap: .4rem; }
+.student-leaderboard-page .slb-student-count {
+  background: rgba(163,113,247,.12); border: 1px solid rgba(163,113,247,.3);
+  color: var(--purple); padding: .2rem .5rem; border-radius: var(--r-pill); font-size: .72rem; font-weight: 700;
+}
+.student-leaderboard-page .slb-toggle-btn {
+  background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-2);
+  padding: .2rem .5rem; border-radius: var(--r-pill); font-size: .72rem; font-weight: 700;
+  cursor: pointer; font-family: var(--font-b); transition: all .2s;
+}
+.student-leaderboard-page .slb-toggle-btn:hover  { border-color: var(--purple); color: var(--purple); }
+.student-leaderboard-page .slb-toggle-btn:active { transform: scale(.95); }
+
+/* ══ LEADERBOARD LIST ══ */
+.student-leaderboard-page .slb-leaderboard-list { display: flex; flex-direction: column; gap: .38rem; }
+.student-leaderboard-page .slb-lb-item {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; padding: .65rem .85rem;
+  display: flex; align-items: center; gap: .65rem; transition: all .2s;
+}
+.student-leaderboard-page .slb-lb-item:active { background: var(--bg-elevated); transform: scale(.98); }
+.student-leaderboard-page .slb-lb-item.is-me {
+  background: linear-gradient(135deg, rgba(163,113,247,.12), rgba(163,113,247,.06));
+  border-color: var(--purple); box-shadow: 0 0 10px rgba(163,113,247,.18);
+}
+.student-leaderboard-page .slb-lb-item.top-three { border-width: 2px; }
+.student-leaderboard-page .slb-lb-rank { flex-shrink: 0; }
+.student-leaderboard-page .slb-rank-badge {
+  display: flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 50%;
+  font-weight: 700; font-size: 1rem;
+  background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-2);
+}
+.student-leaderboard-page .slb-leaderboard-list .slb-lb-item:nth-child(1) .slb-rank-badge {
+  background: linear-gradient(135deg, var(--gold), #f59e0b); color: #0d1117; border-color: var(--gold); font-size: 1.15rem;
+}
+.student-leaderboard-page .slb-leaderboard-list .slb-lb-item:nth-child(2) .slb-rank-badge {
+  background: linear-gradient(135deg, var(--silver), #9ca3af); color: #0d1117; border-color: var(--silver); font-size: 1.15rem;
+}
+.student-leaderboard-page .slb-leaderboard-list .slb-lb-item:nth-child(3) .slb-rank-badge {
+  background: linear-gradient(135deg, var(--bronze), #ea580c); color: #fff; border-color: var(--bronze); font-size: 1.15rem;
+}
+.student-leaderboard-page .slb-lb-info { flex: 1; min-width: 0; }
+.student-leaderboard-page .slb-lb-name {
+  font-size: .88rem; font-weight: 700; color: var(--text-1);
+  margin-bottom: .15rem; display: flex; align-items: center; gap: .35rem;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.student-leaderboard-page .slb-you-badge {
+  background: var(--purple); color: #fff; padding: .1rem .35rem;
+  border-radius: 4px; font-size: .6rem; font-weight: 700; flex-shrink: 0;
+}
+.student-leaderboard-page .slb-lb-level { font-size: .7rem; color: var(--text-3); }
+.student-leaderboard-page .slb-lb-coins {
+  font-size: .9rem; font-weight: 700; color: var(--gold); flex-shrink: 0; white-space: nowrap;
+}
+
+/* ── show more ── */
+.student-leaderboard-page .slb-show-more-btn {
+  width: 100%; background: var(--bg-elevated); border: 1px dashed var(--border); color: var(--text-2);
+  padding: .65rem; border-radius: 10px; font-size: .84rem; font-weight: 700;
+  cursor: pointer; margin-top: .6rem; font-family: var(--font-b); transition: all .2s;
+}
+.student-leaderboard-page .slb-show-more-btn:hover  { border-color: var(--purple); color: var(--purple); }
+.student-leaderboard-page .slb-show-more-btn:active { transform: scale(.98); }
+
+/* ══ MOTIVATION ══ */
+.student-leaderboard-page .slb-motivation {
+  background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--green);
+  border-radius: var(--r-card); padding: 1rem; margin-top: .85rem;
+  text-align: center; box-shadow: var(--shadow); position: relative; overflow: hidden;
+}
+.student-leaderboard-page .slb-motivation::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(63,185,80,.06), transparent);
+  pointer-events: none;
+}
+.student-leaderboard-page .slb-motivation-title {
+  display: flex; align-items: center; justify-content: center; gap: .45rem; margin-bottom: .4rem;
+}
+.student-leaderboard-page .slb-motivation-emoji { font-size: 1.8rem; }
+.student-leaderboard-page .slb-motivation h3 {
+  font-family: var(--font-h); font-size: 1rem; font-weight: 700; color: var(--text-1);
+}
+.student-leaderboard-page .slb-motivation p { font-size: .8rem; color: var(--text-2); margin-bottom: .75rem; line-height: 1.5; }
+.student-leaderboard-page .slb-motivation-btns { display: flex; flex-direction: column; gap: .4rem; }
+.student-leaderboard-page .slb-mot-btn {
+  width: 100%; padding: .65rem 1rem; border-radius: 10px;
+  font-weight: 700; font-size: .88rem; cursor: pointer; border: none;
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+  font-family: var(--font-b); transition: all .2s;
+}
+.student-leaderboard-page .slb-mot-btn.primary {
+  background: linear-gradient(135deg, #a371f7, #7c3aed); color: #fff;
+  box-shadow: 0 4px 12px rgba(163,113,247,.3);
+}
+.student-leaderboard-page .slb-mot-btn.primary:active { transform: scale(.97); }
+.student-leaderboard-page .slb-mot-btn.secondary {
+  background: var(--bg-elevated); border: 1px solid var(--green); color: var(--green);
+}
+.student-leaderboard-page .slb-mot-btn.secondary:active { background: rgba(63,185,80,.1); transform: scale(.97); }
+
+/* ══ BOTTOM NAV — premium glassy style ══ */
+.student-leaderboard-page .slb-bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  height: 72px;
+  background: linear-gradient(180deg, rgba(13,17,23,.92) 0%, rgba(9,12,17,.98) 100%);
+  backdrop-filter: blur(24px) saturate(1.4);
+  border-top: 1px solid rgba(255,255,255,.07);
+  display: flex; justify-content: space-around; align-items: stretch;
+  /* top glow line */
+  box-shadow:
+    0 -1px 0 rgba(163,113,247,.25),
+    0 -4px 30px rgba(0,0,0,.8),
+    inset 0 1px 0 rgba(255,255,255,.04);
+  padding: 0;
+}
+.student-leaderboard-page .slb-nav-item {
+  flex: 1; background: transparent; border: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .18rem; padding: .45rem .2rem;
+  cursor: pointer; transition: all .22s ease;
+  color: var(--text-3); position: relative; font-family: var(--font-b);
+  -webkit-tap-highlight-color: transparent;
+}
+/* active: glowing gold line at top */
+.student-leaderboard-page .slb-nav-item.active::before {
+  content: ''; position: absolute; top: 0; left: 15%; right: 15%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold) 40%, #fff8c0 50%, var(--gold) 60%, transparent);
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 0 10px rgba(251,191,36,1), 0 0 20px rgba(251,191,36,.6), 0 0 40px rgba(251,191,36,.3);
+}
+/* active: pill background behind icon */
+.student-leaderboard-page .slb-nav-item.active::after {
+  content: ''; position: absolute; top: 5px;
+  width: 46px; height: 30px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(251,191,36,.18), rgba(251,191,36,.05) 70%, transparent);
+  border-radius: 16px;
+}
+.student-leaderboard-page .slb-nav-item.active { color: var(--gold); }
+.student-leaderboard-page .slb-nav-item:active  { transform: scale(.88); }
+.student-leaderboard-page .slb-nav-icon {
+  font-size: 1.5rem; transition: transform .22s, filter .22s;
+  position: relative; z-index: 1; line-height: 1;
+}
+.student-leaderboard-page .slb-nav-item.active .slb-nav-icon {
+  transform: translateY(-2px) scale(1.15);
+  filter: drop-shadow(0 0 8px rgba(251,191,36,.8)) drop-shadow(0 2px 4px rgba(0,0,0,.4));
+}
+.student-leaderboard-page .slb-nav-text {
+  font-size: .64rem; font-weight: 700; letter-spacing: .4px;
+  position: relative; z-index: 1; transition: all .22s;
+}
+.student-leaderboard-page .slb-nav-item.active .slb-nav-text {
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(251,191,36,.7), 0 0 20px rgba(251,191,36,.3);
+}
+
+/* ══ EMPTY STATE ══ */
+.student-leaderboard-page .slb-empty-state { text-align: center; padding: 2.5rem 1rem; color: var(--text-3); }
+.student-leaderboard-page .slb-empty-icon  { font-size: 2.8rem; display: block; margin-bottom: .65rem; opacity: .4; }
+.student-leaderboard-page .slb-empty-state p { font-size: .95rem; }
+
+/* ── scrollbar scoped ── */
+.student-leaderboard-page ::-webkit-scrollbar       { width: 6px; }
+.student-leaderboard-page ::-webkit-scrollbar-track { background: var(--bg-dark); }
+.student-leaderboard-page ::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 3px; }
+
+/* ── focus ── */
+.student-leaderboard-page .slb-back-btn:focus,
+.student-leaderboard-page .slb-refresh-btn:focus,
+.student-leaderboard-page .slb-mot-btn:focus,
+.student-leaderboard-page .slb-btn-primary:focus,
+.student-leaderboard-page .slb-toggle-btn:focus,
+.student-leaderboard-page .slb-nav-item:focus {
+  outline: 2px solid var(--purple); outline-offset: 2px;
+}
+
+/* ── responsive ── */
+@media (max-width: 374px) {
+  .student-leaderboard-page .slb-header-title { font-size: 1.05rem; }
+  .student-leaderboard-page .slb-coin-number  { font-size: 1.9rem; }
+  .student-leaderboard-page .slb-coin-icon-large { font-size: 1.8rem; }
+}
+
+@media (min-width: 768px) {
+  .student-leaderboard-page .slb-header-row   { padding: 0 2rem; }
+  .student-leaderboard-page .slb-coins-strip  { padding: 0 2rem; }
+  .student-leaderboard-page .slb-container    { max-width: 640px; margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; }
+  .student-leaderboard-page .slb-header-title { font-size: 1.5rem; }
+  .student-leaderboard-page .slb-coin-number  { font-size: 2.8rem; }
+  .student-leaderboard-page .slb-motivation-btns { flex-direction: row; gap: .6rem; }
+  .student-leaderboard-page .slb-mot-btn      { flex: 1; }
+  .student-leaderboard-page .slb-rank-badge   { width: 44px; height: 44px; }
+}
+
+@media (min-width: 1024px) {
+  .student-leaderboard-page .slb-container { max-width: 780px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .student-leaderboard-page *,
+  .student-leaderboard-page *::before,
+  .student-leaderboard-page *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

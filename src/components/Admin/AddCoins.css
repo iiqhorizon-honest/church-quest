@@ -1,0 +1,672 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@500;700;900&family=Cairo:wght@400;600;700;900&display=swap');
+
+/* ══════════════════════════════════════════════════
+   ADD COINS — matches Admin / Student Dashboard style
+   Fully scoped to .add-coins-page
+   Zero global leaks · Mobile-first
+══════════════════════════════════════════════════ */
+
+.add-coins-page *,
+.add-coins-page *::before,
+.add-coins-page *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.add-coins-page {
+  --bg-dark:     #0d1117;
+  --bg-card:     #161b22;
+  --bg-elevated: #1c2128;
+  --purple: #a371f7;
+  --green:  #3fb950;
+  --blue:   #58a6ff;
+  --orange: #f78166;
+  --gold:   #fbbf24;
+  --red:    #ef4444;
+  --text-1: #f0f6fc;
+  --text-2: #8b949e;
+  --text-3: #6e7681;
+  --border: #30363d;
+  --shadow: 0 4px 16px rgba(0,0,0,0.5);
+  --font-h: 'Exo 2', 'Cairo', sans-serif;
+  --font-b: 'Cairo', sans-serif;
+  --header-h: 58px;
+  --r-card:   14px;
+  --r-pill:   50px;
+
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #000 100%);
+  font-family: var(--font-b);
+  direction: rtl;
+  color: var(--text-1);
+  overflow-x: hidden;
+  position: relative;
+  padding-bottom: 80px;
+}
+
+/* ── Background orbs ─────────────────────────── */
+.add-coins-page .bg-orbs {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+}
+.add-coins-page .orb {
+  position: absolute; border-radius: 50%;
+}
+.add-coins-page .orb-1 {
+  top: -80px; right: -60px;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(251,191,36,.2) 0%, rgba(251,191,36,.06) 50%, transparent 70%);
+  animation: ac-orb1 12s ease-in-out infinite;
+}
+.add-coins-page .orb-2 {
+  bottom: 80px; left: -80px;
+  width: 360px; height: 360px;
+  background: radial-gradient(circle, rgba(163,113,247,.18) 0%, rgba(163,113,247,.05) 50%, transparent 70%);
+  animation: ac-orb2 15s ease-in-out infinite;
+  animation-delay: -5s;
+}
+.add-coins-page .orb-3 {
+  top: 40%; left: 50%; transform: translate(-50%, -50%);
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(63,185,80,.1) 0%, transparent 70%);
+  animation: ac-orb3 20s ease-in-out infinite;
+  animation-delay: -8s;
+}
+
+/* ── Stars ───────────────────────────────────── */
+.add-coins-page::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 10% 15%, rgba(251,191,36,.9), transparent),
+    radial-gradient(1px   1px   at 25% 40%, rgba(255,255,255,.8), transparent),
+    radial-gradient(2px   2px   at 40% 8%,  rgba(251,191,36,.7), transparent),
+    radial-gradient(1px   1px   at 55% 55%, rgba(255,255,255,.9), transparent),
+    radial-gradient(1.5px 1.5px at 70% 20%, rgba(251,191,36,.8), transparent),
+    radial-gradient(1px   1px   at 82% 65%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1px   1px   at 90% 35%, rgba(251,191,36,.9), transparent),
+    radial-gradient(1.5px 1.5px at 15% 75%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1px   1px   at 35% 88%, rgba(251,191,36,.7), transparent),
+    radial-gradient(2px   2px   at 60% 80%, rgba(255,255,255,.8), transparent),
+    radial-gradient(1px   1px   at 78% 90%, rgba(251,191,36,.6), transparent),
+    radial-gradient(1px   1px   at 5%  50%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1px   1px   at 48% 30%, rgba(251,191,36,.5), transparent);
+  animation: ac-twinkle 5s ease-in-out infinite;
+}
+
+/* ── Keyframes ───────────────────────────────── */
+@keyframes ac-twinkle {
+  0%,100% { opacity: .3; }
+  50%     { opacity: .8; }
+}
+@keyframes ac-orb1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%     { transform: translate(30px,-40px) scale(1.05); }
+  66%     { transform: translate(-20px,20px) scale(.97); }
+}
+@keyframes ac-orb2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  40%     { transform: translate(-40px,30px) scale(1.08); }
+  80%     { transform: translate(25px,-20px) scale(.95); }
+}
+@keyframes ac-orb3 {
+  0%,100% { transform: translate(-50%,-50%) scale(1); }
+  50%     { transform: translate(-50%,-50%) scale(1.1); }
+}
+@keyframes ac-spin       { to { transform: rotate(360deg); } }
+@keyframes ac-float      { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes ac-slidein    { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes ac-fade       { from{opacity:0} to{opacity:1} }
+@keyframes ac-pop        { 0%{transform:scale(1)} 50%{transform:scale(1.1)} 100%{transform:scale(1)} }
+@keyframes ac-shimmer    { 0%{left:-60%} 100%{left:130%} }
+@keyframes ac-results-in {
+  from{opacity:0;transform:translateY(-8px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes ac-card-in {
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes ac-notif-in {
+  from{opacity:0;transform:translateY(-20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes ac-skeleton {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ══════════════════════════════════════════════
+   NOTIFICATIONS (DOM-injected)
+══════════════════════════════════════════════ */
+.notification {
+  position: fixed; top: 5rem; left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: .9rem 1.5rem;
+  font-family: var(--font-b); font-size: .9rem; font-weight: 700;
+  color: var(--text-1); z-index: 9999; pointer-events: none;
+  box-shadow: var(--shadow);
+  opacity: 0; transition: opacity .3s ease, transform .3s ease;
+  min-width: 220px; text-align: center;
+}
+.notification.show { opacity: 1; animation: ac-notif-in .3s ease; }
+.notification-success { border-left: 3px solid var(--green); }
+.notification-error   { border-left: 3px solid var(--orange); }
+
+/* ══════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════ */
+.add-coins-page .header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: linear-gradient(135deg,
+    rgba(13,17,23,.97) 0%,
+    rgba(22,27,34,.97) 50%,
+    rgba(13,17,23,.97) 100%
+  );
+  box-shadow:
+    0 1px 0 rgba(251,191,36,.3),
+    0 4px 24px rgba(0,0,0,.8),
+    0 0 40px rgba(251,191,36,.05);
+  backdrop-filter: blur(20px);
+  height: var(--header-h);
+}
+.add-coins-page .header::after {
+  content: '';
+  position: absolute; bottom: 0; left: 5%; right: 5%; height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(163,113,247,.6) 20%,
+    rgba(251,191,36,.8) 50%,
+    rgba(163,113,247,.6) 80%,
+    transparent
+  );
+  box-shadow: 0 0 12px rgba(251,191,36,.4), 0 0 24px rgba(163,113,247,.3);
+}
+.add-coins-page .header-content {
+  height: 100%; display: flex; align-items: center; justify-content: center;
+  padding: 0 1rem; gap: .75rem;
+}
+.add-coins-page .header-title {
+  display: flex; align-items: center; gap: .75rem;
+}
+.add-coins-page .header-title h1 {
+  font-family: var(--font-h); font-size: 1.15rem; font-weight: 700;
+  color: var(--text-1);
+}
+.add-coins-page .header-badge {
+  font-size: .75rem; font-weight: 700;
+  border-radius: var(--r-pill); padding: .25rem .75rem;
+  border: 1px solid;
+}
+.add-coins-page .header-badge.badge-add {
+  background: rgba(63,185,80,.12); border-color: rgba(63,185,80,.3); color: var(--green);
+}
+.add-coins-page .header-badge.badge-deduct {
+  background: rgba(247,129,102,.12); border-color: rgba(247,129,102,.3); color: var(--orange);
+}
+
+/* ══════════════════════════════════════════════
+   CONTAINER
+══════════════════════════════════════════════ */
+.add-coins-page .container {
+  padding: 1rem;
+  padding-top: calc(var(--header-h) + 1.25rem);
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  max-width: 600px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 1rem;
+  animation: ac-slidein .35s ease;
+}
+
+/* ══════════════════════════════════════════════
+   MAIN CARD
+══════════════════════════════════════════════ */
+.add-coins-page .main-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 1.25rem;
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 1.1rem;
+  animation: ac-card-in .4s ease both;
+}
+
+/* ══════════════════════════════════════════════
+   OPERATION TOGGLE
+══════════════════════════════════════════════ */
+.add-coins-page .operation-toggle {
+  display: flex; background: var(--bg-elevated);
+  border: 1px solid var(--border); border-radius: 14px;
+  padding: 4px; gap: 4px;
+}
+.add-coins-page .toggle-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: .4rem;
+  padding: .65rem; border-radius: 10px; border: none;
+  font-family: var(--font-b); font-size: .9rem; font-weight: 700;
+  color: var(--text-2); background: transparent;
+  cursor: pointer; transition: all .25s;
+  -webkit-tap-highlight-color: transparent;
+}
+.add-coins-page .toggle-btn:hover { color: var(--text-1); }
+.add-coins-page .toggle-btn.active { color: white; }
+.add-coins-page .toggle-btn.add-active {
+  background: linear-gradient(135deg, #2ea043, var(--green));
+  box-shadow: 0 4px 14px rgba(63,185,80,.4);
+}
+.add-coins-page .toggle-btn.deduct-active {
+  background: linear-gradient(135deg, #e05a44, var(--orange));
+  box-shadow: 0 4px 14px rgba(247,129,102,.4);
+}
+.add-coins-page .toggle-icon { font-size: 1.1rem; }
+
+/* ══════════════════════════════════════════════
+   FORM SECTIONS
+══════════════════════════════════════════════ */
+.add-coins-page .form-section {
+  display: flex; flex-direction: column; gap: .5rem;
+}
+.add-coins-page .form-label {
+  font-size: .82rem; font-weight: 700; color: var(--text-2);
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* Search wrapper */
+.add-coins-page .search-wrapper { position: relative; }
+.add-coins-page .search-wrapper input,
+.add-coins-page .form-section input[type="number"],
+.add-coins-page .form-section textarea {
+  width: 100%;
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: 12px; padding: .75rem 1rem;
+  font-family: var(--font-b); font-size: .9rem; color: var(--text-1);
+  outline: none; transition: all .2s;
+  resize: none;
+}
+.add-coins-page .search-wrapper input::placeholder,
+.add-coins-page .form-section input::placeholder,
+.add-coins-page .form-section textarea::placeholder { color: var(--text-3); }
+.add-coins-page .search-wrapper input:focus,
+.add-coins-page .form-section input[type="number"]:focus,
+.add-coins-page .form-section textarea:focus {
+  border-color: rgba(251,191,36,.5);
+  box-shadow: 0 0 0 3px rgba(251,191,36,.1);
+  background: var(--bg-card);
+}
+.add-coins-page .search-wrapper input:disabled,
+.add-coins-page .form-section input:disabled,
+.add-coins-page .form-section textarea:disabled {
+  opacity: .5; cursor: not-allowed;
+}
+.add-coins-page .clear-search {
+  position: absolute; left: .75rem; top: 50%; transform: translateY(-50%);
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  color: var(--text-2); width: 22px; height: 22px; border-radius: 50%;
+  font-size: .75rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.add-coins-page .clear-search:hover { color: var(--orange); border-color: rgba(247,129,102,.4); }
+
+/* ══════════════════════════════════════════════
+   SEARCH RESULTS DROPDOWN
+══════════════════════════════════════════════ */
+.add-coins-page .search-results {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,.6);
+  animation: ac-results-in .2s ease;
+}
+.add-coins-page .search-item {
+  width: 100%; background: none; border: none;
+  display: flex; align-items: center; gap: .75rem;
+  padding: .75rem 1rem; cursor: pointer;
+  transition: background .15s; text-align: right;
+  border-bottom: 1px solid rgba(48,54,61,.6);
+  font-family: var(--font-b);
+  -webkit-tap-highlight-color: transparent;
+}
+.add-coins-page .search-item:last-child { border-bottom: none; }
+.add-coins-page .search-item:hover { background: rgba(251,191,36,.06); }
+.add-coins-page .search-item-first { background: rgba(251,191,36,.04); }
+
+.add-coins-page .search-avatar {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--purple), var(--gold));
+  display: flex; align-items: center; justify-content: center;
+  font-size: .95rem; font-weight: 900; color: white;
+}
+.add-coins-page .search-info {
+  flex: 1; display: flex; flex-direction: column; gap: 1px; text-align: right;
+}
+.add-coins-page .search-info strong { font-size: .88rem; color: var(--text-1); }
+.add-coins-page .search-info span   { font-size: .72rem; color: var(--text-3); }
+.add-coins-page .search-coins {
+  font-family: var(--font-h); font-size: .82rem; font-weight: 700;
+  color: var(--gold); white-space: nowrap;
+}
+.add-coins-page .enter-hint {
+  font-size: .65rem; color: var(--text-3);
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 6px; padding: .15rem .4rem; white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════════
+   SELECTED STUDENT CARD
+══════════════════════════════════════════════ */
+.add-coins-page .selected-card {
+  background: var(--bg-elevated); border: 1px solid rgba(251,191,36,.25);
+  border-radius: 14px; padding: .9rem 1rem;
+  display: flex; align-items: center; gap: .85rem;
+  box-shadow: 0 0 0 1px rgba(251,191,36,.1), var(--shadow);
+  animation: ac-card-in .3s ease;
+}
+.add-coins-page .selected-avatar {
+  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--purple), var(--gold));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-h); font-size: 1.2rem; font-weight: 900; color: white;
+  box-shadow: 0 0 16px rgba(251,191,36,.3);
+}
+.add-coins-page .selected-info {
+  flex: 1; display: flex; flex-direction: column; gap: .25rem;
+}
+.add-coins-page .selected-info h3 {
+  font-family: var(--font-h); font-size: 1rem; font-weight: 700; color: var(--text-1);
+}
+.add-coins-page .selected-id {
+  font-size: .72rem; color: var(--text-3);
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 6px; padding: .1rem .45rem; width: fit-content;
+}
+.add-coins-page .selected-balance {
+  display: flex; align-items: center; gap: .4rem;
+  font-size: .8rem; color: var(--text-2); margin-top: .1rem;
+}
+.add-coins-page .selected-balance strong {
+  color: var(--gold); font-family: var(--font-h); font-size: .9rem;
+  text-shadow: 0 0 10px rgba(251,191,36,.4);
+}
+.add-coins-page .remove-btn {
+  background: rgba(247,129,102,.1); border: 1px solid rgba(247,129,102,.2);
+  color: var(--orange); width: 30px; height: 30px; border-radius: 50%;
+  font-size: .8rem; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.add-coins-page .remove-btn:hover {
+  background: rgba(247,129,102,.2); transform: scale(1.1);
+}
+
+/* ══════════════════════════════════════════════
+   QUICK AMOUNTS
+══════════════════════════════════════════════ */
+.add-coins-page .quick-amounts {
+  display: flex; gap: .4rem; flex-wrap: wrap;
+}
+.add-coins-page .quick-btn {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: 10px; padding: .4rem .85rem;
+  font-family: var(--font-h); font-size: .85rem; font-weight: 700;
+  color: var(--text-2); cursor: pointer; transition: all .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.add-coins-page .quick-btn:hover:not(:disabled) {
+  border-color: rgba(251,191,36,.4); color: var(--gold);
+  background: rgba(251,191,36,.07);
+}
+.add-coins-page .quick-btn:active:not(:disabled) { transform: scale(.93); }
+.add-coins-page .quick-btn:disabled { opacity: .3; cursor: not-allowed; }
+.add-coins-page .quick-btn-active {
+  background: rgba(251,191,36,.15) !important;
+  border-color: rgba(251,191,36,.6) !important;
+  color: var(--gold) !important;
+  box-shadow: 0 0 10px rgba(251,191,36,.2);
+}
+
+/* Character counter */
+.add-coins-page .char-counter {
+  font-size: .72rem; color: var(--text-3); font-weight: 600;
+}
+.add-coins-page .counter-over { color: var(--orange); }
+
+/* ══════════════════════════════════════════════
+   ERROR BOX
+══════════════════════════════════════════════ */
+.add-coins-page .error-box {
+  display: flex; align-items: center; gap: .6rem;
+  background: rgba(247,129,102,.08); border: 1px solid rgba(247,129,102,.25);
+  border-radius: 12px; padding: .75rem 1rem;
+  animation: ac-slidein .25s ease;
+}
+.add-coins-page .error-box span { font-size: 1.1rem; flex-shrink: 0; }
+.add-coins-page .error-box p { font-size: .85rem; color: var(--orange); font-weight: 600; }
+
+/* ══════════════════════════════════════════════
+   PREVIEW BOX
+══════════════════════════════════════════════ */
+.add-coins-page .preview-box {
+  border-radius: 14px; padding: 1rem 1.1rem;
+  display: flex; flex-direction: column; gap: .5rem;
+  border: 1px solid; animation: ac-card-in .3s ease;
+}
+.add-coins-page .preview-add {
+  background: rgba(63,185,80,.06); border-color: rgba(63,185,80,.25);
+}
+.add-coins-page .preview-deduct {
+  background: rgba(247,129,102,.06); border-color: rgba(247,129,102,.25);
+}
+.add-coins-page .preview-warning {
+  background: rgba(251,191,36,.06); border-color: rgba(251,191,36,.35);
+  box-shadow: 0 0 0 1px rgba(251,191,36,.1);
+}
+.add-coins-page .balance-warning {
+  font-size: .82rem; font-weight: 700; color: var(--gold);
+  text-align: center; padding: .35rem;
+  background: rgba(251,191,36,.1); border-radius: 8px;
+  animation: ac-pop .4s ease;
+}
+.add-coins-page .preview-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .85rem;
+}
+.add-coins-page .preview-row span   { color: var(--text-2); }
+.add-coins-page .preview-row strong { color: var(--text-1); font-weight: 700; }
+.add-coins-page .preview-total {
+  border-top: 1px solid var(--border); padding-top: .5rem; margin-top: .1rem;
+}
+.add-coins-page .preview-amount { color: var(--gold) !important; font-family: var(--font-h); font-size: .95rem; }
+.add-coins-page .positive { color: var(--green) !important; font-family: var(--font-h); font-size: .95rem; }
+.add-coins-page .negative { color: var(--red)   !important; font-family: var(--font-h); font-size: .95rem; }
+
+/* ══════════════════════════════════════════════
+   SUBMIT BUTTON
+══════════════════════════════════════════════ */
+.add-coins-page .submit-btn {
+  width: 100%; padding: .95rem;
+  border: none; border-radius: 14px;
+  font-family: var(--font-b); font-size: 1rem; font-weight: 900;
+  cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  -webkit-tap-highlight-color: transparent;
+}
+.add-coins-page .btn-add {
+  background: linear-gradient(135deg, #2ea043, var(--green));
+  color: white; box-shadow: 0 4px 16px rgba(63,185,80,.4);
+}
+.add-coins-page .btn-add:hover:not(:disabled) {
+  transform: translateY(-2px); box-shadow: 0 6px 22px rgba(63,185,80,.5);
+}
+.add-coins-page .btn-deduct {
+  background: linear-gradient(135deg, #e05a44, var(--orange));
+  color: white; box-shadow: 0 4px 16px rgba(247,129,102,.4);
+}
+.add-coins-page .btn-deduct:hover:not(:disabled) {
+  transform: translateY(-2px); box-shadow: 0 6px 22px rgba(247,129,102,.5);
+}
+.add-coins-page .submit-btn:active:not(:disabled) { transform: scale(.98); }
+.add-coins-page .submit-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+.add-coins-page .spinner-small {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,.3);
+  border-top-color: white; border-radius: 50%;
+  animation: ac-spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════
+   RECENT TRANSACTIONS SECTION
+══════════════════════════════════════════════ */
+.add-coins-page .transactions-section {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+  box-shadow: var(--shadow);
+  animation: ac-card-in .45s ease both;
+  animation-delay: .1s;
+}
+
+/* Toggle header */
+.add-coins-page .tx-toggle {
+  width: 100%; background: none; border: none;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 1.25rem; cursor: pointer;
+  font-family: var(--font-b); font-size: .95rem; font-weight: 700;
+  color: var(--text-1); transition: background .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.add-coins-page .tx-toggle:hover { background: rgba(255,255,255,.03); }
+.add-coins-page .tx-right {
+  display: flex; align-items: center; gap: .5rem;
+}
+.add-coins-page .tx-badge {
+  background: rgba(163,113,247,.15); border: 1px solid rgba(163,113,247,.3);
+  color: var(--purple); border-radius: var(--r-pill);
+  font-size: .7rem; font-weight: 700; padding: .15rem .55rem;
+}
+.add-coins-page .tx-refresh {
+  background: rgba(255,255,255,.05); border: 1px solid var(--border);
+  color: var(--text-2); width: 26px; height: 26px; border-radius: 8px;
+  font-size: .85rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.add-coins-page .tx-refresh:hover { background: rgba(163,113,247,.1); color: var(--purple); }
+.add-coins-page .tx-arrow {
+  font-size: 1.1rem; color: var(--text-3);
+  transform: rotate(-90deg); transition: transform .25s;
+  display: inline-block;
+}
+.add-coins-page .tx-arrow.arrow-up { transform: rotate(90deg); }
+
+/* Body */
+.add-coins-page .tx-body {
+  border-top: 1px solid var(--border);
+  animation: ac-slidein .25s ease;
+}
+
+/* Skeleton loading */
+.add-coins-page .tx-skeleton-list { padding: .75rem; display: flex; flex-direction: column; gap: .5rem; }
+.add-coins-page .tx-skeleton {
+  display: flex; align-items: center; gap: .75rem; padding: .6rem;
+}
+.add-coins-page .skeleton-icon {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(90deg, var(--bg-elevated) 25%, rgba(255,255,255,.05) 50%, var(--bg-elevated) 75%);
+  background-size: 200% 100%;
+  animation: ac-skeleton 1.5s ease-in-out infinite;
+}
+.add-coins-page .skeleton-info { flex: 1; display: flex; flex-direction: column; gap: .35rem; }
+.add-coins-page .skeleton-line {
+  height: 10px; border-radius: 5px;
+  background: linear-gradient(90deg, var(--bg-elevated) 25%, rgba(255,255,255,.05) 50%, var(--bg-elevated) 75%);
+  background-size: 200% 100%;
+  animation: ac-skeleton 1.5s ease-in-out infinite;
+}
+.add-coins-page .skeleton-name   { width: 60%; }
+.add-coins-page .skeleton-reason { width: 80%; animation-delay: .15s; }
+.add-coins-page .skeleton-amount {
+  width: 50px; height: 24px; border-radius: 8px;
+  background: linear-gradient(90deg, var(--bg-elevated) 25%, rgba(255,255,255,.05) 50%, var(--bg-elevated) 75%);
+  background-size: 200% 100%;
+  animation: ac-skeleton 1.5s ease-in-out infinite;
+  animation-delay: .3s;
+}
+
+/* Transaction list */
+.add-coins-page .tx-list { display: flex; flex-direction: column; }
+.add-coins-page .tx-item {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .85rem 1.25rem;
+  border-bottom: 1px solid rgba(48,54,61,.5);
+  transition: background .15s;
+}
+.add-coins-page .tx-item:last-child { border-bottom: none; }
+.add-coins-page .tx-item:hover { background: rgba(255,255,255,.02); }
+
+.add-coins-page .tx-icon {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900;
+}
+.add-coins-page .tx-plus  .tx-icon { background: rgba(63,185,80,.12);  color: var(--green);  border: 1px solid rgba(63,185,80,.25); }
+.add-coins-page .tx-minus .tx-icon { background: rgba(247,129,102,.12); color: var(--orange); border: 1px solid rgba(247,129,102,.25); }
+
+.add-coins-page .tx-info { flex: 1; min-width: 0; }
+.add-coins-page .tx-info h4 {
+  font-size: .88rem; font-weight: 700; color: var(--text-1);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.add-coins-page .tx-info p {
+  font-size: .76rem; color: var(--text-2); margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.add-coins-page .tx-time {
+  font-size: .65rem; color: var(--text-3); display: block; margin-top: 2px;
+}
+.add-coins-page .tx-amount {
+  font-family: var(--font-h); font-size: .88rem; font-weight: 900;
+  white-space: nowrap; flex-shrink: 0;
+}
+.add-coins-page .amount-plus  { color: var(--green); }
+.add-coins-page .amount-minus { color: var(--orange); }
+
+/* Empty transactions */
+.add-coins-page .empty-state {
+  text-align: center; padding: 2.5rem 1rem;
+  display: flex; flex-direction: column; align-items: center; gap: .6rem;
+}
+.add-coins-page .empty-icon { font-size: 2.5rem; opacity: .4; animation: ac-float 3s ease-in-out infinite; }
+.add-coins-page .empty-state p { font-size: .88rem; color: var(--text-2); }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+@media (min-width: 640px) {
+  .add-coins-page .container { padding: 1.5rem; padding-top: calc(var(--header-h) + 1.5rem); }
+  .add-coins-page .header-content { padding: 0 2rem; }
+}
+
+/* ══════════════════════════════════════════════
+   ACCESSIBILITY
+══════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .add-coins-page *,
+  .add-coins-page *::before,
+  .add-coins-page *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+.add-coins-page .toggle-btn:focus,
+.add-coins-page .quick-btn:focus,
+.add-coins-page .submit-btn:focus,
+.add-coins-page .search-item:focus,
+.add-coins-page .remove-btn:focus,
+.add-coins-page .tx-toggle:focus,
+.add-coins-page .tx-refresh:focus,
+.add-coins-page .search-wrapper input:focus,
+.add-coins-page .form-section input:focus,
+.add-coins-page .form-section textarea:focus {
+  outline: 2px solid var(--gold); outline-offset: 2px;
+}

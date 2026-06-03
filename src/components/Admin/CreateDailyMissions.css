@@ -1,0 +1,1000 @@
+/* ============================================
+   CREATE DAILY MISSIONS - GITHUB DARK OPTIMIZED
+   Compact Mobile-First Design
+   ============================================ */
+
+:root {
+  --bg-dark: #0d1117;
+  --bg-card: #161b22;
+  --bg-elevated: #1c2128;
+  --bg-input: #0d1117;
+  
+  --purple: #a371f7;
+  --green: #3fb950;
+  --blue: #58a6ff;
+  --orange: #f78166;
+  --gold: #fbbf24;
+  
+  --text-1: #f0f6fc;
+  --text-2: #8b949e;
+  --text-3: #6e7681;
+  
+  --border: #30363d;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================
+   BASE LAYOUT
+   ============================================ */
+.create-missions-optimized {
+  min-height: 100vh;
+  background: var(--bg-dark);
+  position: relative;
+  /* ✅ FIX: شلنا overflow-x: hidden لأنه بيكسر position:fixed على iOS */
+  padding-bottom: 2rem;
+}
+
+/* Static background — شلنا الـ aurora animation اللي بتعمل اللون الموف */
+.create-missions-optimized::before {
+  content: none;
+}
+
+/* Stars Background */
+.stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 10% 15%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px   at 25% 35%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px   at 40% 10%, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px   at 55% 60%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 70% 25%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px   at 85% 45%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px   at 15% 75%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px   at 30% 85%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 60% 90%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px   at 90% 80%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px   at 45% 50%, rgba(255,255,255,0.3), transparent),
+    radial-gradient(2px 2px   at 75% 70%, rgba(255,255,255,0.6), transparent);
+  background-size: 300px 300px, 250px 250px, 400px 400px,
+                   200px 200px, 350px 350px, 280px 280px,
+                   320px 320px, 260px 260px, 380px 380px,
+                   290px 290px, 230px 230px, 410px 410px;
+  animation: twinkle 8s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  25%       { opacity: 0.45; transform: scale(1.01); }
+  50%       { opacity: 0.30; transform: scale(1); }
+  75%       { opacity: 0.50; transform: scale(1.02); }
+}
+
+/* ============================================
+   TOAST
+   ============================================ */
+.toast-smart {
+  position: fixed;
+  top: 5.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.875rem 1.25rem;
+  box-shadow: var(--shadow);
+  z-index: 300;
+  animation: toast-in 0.3s;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-1);
+  min-width: 200px;
+  max-width: 90vw;
+  text-align: center;
+}
+
+.toast-smart.success { border-left: 3px solid var(--green); }
+.toast-smart.error { border-left: 3px solid var(--orange); }
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.modal-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: var(--shadow);
+  animation: modal-in 0.2s ease-out;
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-box h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-1);
+  text-align: center;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.modal-actions .btn-save-smart,
+.modal-actions .btn-cancel-smart,
+.modal-actions .btn-delete-confirm {
+  flex: 1;
+  height: 44px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-delete-confirm {
+  background: var(--orange);
+  color: white;
+}
+
+.btn-delete-confirm:active {
+  transform: scale(0.97);
+  background: #e0604a;
+}
+
+/* ============================================
+   SMART HEADER — fixed + glass blur
+   ============================================ */
+.smart-header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+  background: rgba(22, 27, 34, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(48, 54, 61, 0.8);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.header-glass {
+  padding: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.greeting-section h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.2;
+}
+
+/* ✅ FIX: شلنا .status-row و .connection-status من الـ header */
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-1);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-btn:active:not(:disabled) {
+  transform: scale(0.95);
+  background: var(--bg-card);
+}
+
+/* ============================================
+   DASHBOARD BODY
+   ✅ FIX: padding-top عشان المحتوى ميتغطيش بالهيدر الـ fixed
+   ============================================ */
+.dashboard-body-smart {
+  /* بدل padding shorthand عشان منحتاجش نـ override */
+  padding-top: 80px;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ============================================
+   CONTROL PANEL
+   ============================================ */
+.control-panel-smart {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.date-section-smart {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.date-picker-wrapper {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.date-picker-wrapper label {
+  font-size: 0.75rem;
+  color: var(--text-2);
+  font-weight: 600;
+  padding-right: 0.25rem;
+}
+
+.date-input-smart {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 0.875rem;
+  color: var(--text-1);
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.date-input-smart:focus {
+  outline: none;
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(163, 113, 247, 0.1);
+}
+
+.btn-add-mission {
+  background: var(--purple);
+  border: none;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-add-mission:active {
+  transform: scale(0.97);
+  background: #9160e6;
+}
+
+.btn-duplicate-day {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-1);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-duplicate-day:active {
+  transform: scale(0.95);
+  background: var(--bg-card);
+}
+
+/* ============================================
+   TEMPLATES SECTION
+   ============================================ */
+.templates-section-smart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.section-title-smart {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.templates-grid-smart {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.template-btn-smart {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.template-btn-smart:active {
+  transform: scale(0.98);
+  border-color: var(--purple);
+  background: var(--bg-elevated);
+}
+
+.template-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.template-name {
+  flex: 1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-1);
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.template-coins {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-2);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   MISSIONS TIMELINE — Virtual scroll / grouped
+   ============================================ */
+.missions-timeline-smart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ============================================
+   DATE TABS — بدل الـ accordion التقليدي
+   بنعرض التواريخ كـ tabs أفقية scrollable
+   والمهام تحتيها مباشرة
+   ============================================ */
+.date-tabs-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.date-tabs-scroll {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* ضيف padding عشان الـ active border ميتقطعش */
+  padding-top: 4px;
+}
+
+.date-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.date-tab {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.625rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 80px;
+  position: relative;
+}
+
+.date-tab:hover {
+  border-color: rgba(163, 113, 247, 0.4);
+  background: var(--bg-elevated);
+}
+
+.date-tab.active {
+  background: rgba(163, 113, 247, 0.12);
+  border-color: var(--purple);
+  box-shadow: 0 0 0 1px rgba(163, 113, 247, 0.3);
+}
+
+.date-tab .tab-day-name {
+  font-size: 0.7rem;
+  color: var(--text-2);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.date-tab .tab-date-num {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1;
+}
+
+.date-tab .tab-month {
+  font-size: 0.65rem;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.date-tab .tab-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--purple);
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-dark);
+}
+
+.date-tab.active .tab-day-name {
+  color: var(--purple);
+}
+
+.date-tab.active .tab-date-num {
+  color: var(--purple);
+}
+
+/* المهام الخاصة بالـ tab المحدد */
+.tab-missions-panel {
+  animation: panel-in 0.2s ease-out;
+}
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tab-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding: 0 0.25rem;
+}
+
+.tab-panel-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.tab-panel-count {
+  font-size: 0.8rem;
+  color: var(--text-2);
+}
+
+/* ============================================
+   MISSION CARD
+   ============================================ */
+.mission-card-smart {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--purple);
+  border-radius: 12px;
+  padding: 0.875rem;
+  transition: all 0.2s;
+}
+
+.mission-card-smart.editing {
+  border-left-color: var(--blue);
+  background: var(--bg-elevated);
+}
+
+/* View Mode */
+.mission-view-smart {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.mission-icon-smart {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.mission-content-smart {
+  flex: 1;
+  min-width: 0;
+}
+
+.mission-content-smart h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 0.25rem;
+}
+
+.mission-content-smart p {
+  font-size: 0.8rem;
+  color: var(--text-2);
+  line-height: 1.4;
+}
+
+.mission-meta-smart {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.mission-coins-smart {
+  background: rgba(251, 191, 36, 0.12);
+  color: var(--gold);
+  padding: 0.35rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.mission-actions-smart {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.action-icon-btn {
+  width: 32px;
+  height: 32px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-icon-btn:active {
+  transform: scale(0.9);
+}
+
+.action-icon-btn.edit {
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.action-icon-btn.edit:active {
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.action-icon-btn.delete {
+  border-color: rgba(247, 129, 102, 0.3);
+}
+
+.action-icon-btn.delete:active {
+  background: rgba(247, 129, 102, 0.1);
+}
+
+/* Edit Mode */
+.mission-edit-smart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.edit-row-smart {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.icon-select-smart {
+  width: 60px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.625rem;
+  font-size: 1.2rem;
+  color: var(--text-1);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.icon-select-smart:focus {
+  outline: none;
+  border-color: var(--purple);
+}
+
+.icon-select-smart option {
+  background: var(--bg-elevated);
+  font-size: 1.2rem;
+}
+
+.edit-input-smart {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.625rem 0.875rem;
+  color: var(--text-1);
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.edit-input-smart:focus {
+  outline: none;
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(163, 113, 247, 0.1);
+}
+
+.edit-input-smart::placeholder {
+  color: var(--text-3);
+}
+
+.edit-textarea-smart {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.625rem 0.875rem;
+  color: var(--text-1);
+  font-size: 0.85rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.2s;
+}
+
+.edit-textarea-smart:focus {
+  outline: none;
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(163, 113, 247, 0.1);
+}
+
+.edit-textarea-smart::placeholder {
+  color: var(--text-3);
+}
+
+.coins-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.625rem 0.875rem;
+  transition: all 0.2s;
+}
+
+.coins-input-wrapper:focus-within {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(163, 113, 247, 0.1);
+}
+
+.coins-input-smart {
+  width: 60px;
+  background: transparent;
+  border: none;
+  color: var(--text-1);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.coins-input-smart:focus {
+  outline: none;
+}
+
+.coins-label {
+  font-size: 1rem;
+}
+
+.edit-actions-smart {
+  display: flex;
+  gap: 0.5rem;
+  margin-right: auto;
+}
+
+.btn-save-smart,
+.btn-cancel-smart {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-save-smart {
+  background: var(--green);
+  color: white;
+}
+
+.btn-save-smart:active {
+  transform: scale(0.95);
+  background: #33a346;
+}
+
+.btn-cancel-smart {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-1);
+}
+
+.btn-cancel-smart:active {
+  transform: scale(0.95);
+  background: var(--bg-dark);
+}
+
+/* Empty state for a tab with no missions */
+.tab-empty {
+  text-align: center;
+  padding: 2.5rem 1rem;
+}
+
+.tab-empty .empty-emoji {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.75rem;
+  opacity: 0.4;
+}
+
+.tab-empty p {
+  font-size: 0.85rem;
+  color: var(--text-2);
+}
+
+/* ============================================
+   LOADING & EMPTY
+   ============================================ */
+.loading-screen.optimized {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 1.5rem;
+}
+
+.logo-loader {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon {
+  font-size: 3rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.logo-spinner {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-top-color: var(--text-2);
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.empty-smart {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.empty-emoji {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+  opacity: 0.4;
+}
+
+.empty-smart h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-1);
+}
+
+.empty-smart p {
+  font-size: 0.9rem;
+  color: var(--text-2);
+}
+
+/* ============================================
+   MISSIONS LIST
+   ============================================ */
+.missions-list-smart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (min-width: 640px) {
+  .templates-grid-smart {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .mission-view-smart {
+    flex-direction: row;
+  }
+
+  .mission-meta-smart {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .dashboard-body-smart {
+    padding-top: 88px;
+    padding-right: 1.5rem;
+    padding-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .templates-grid-smart {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .templates-grid-smart {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.action-btn:focus,
+.btn-add-mission:focus,
+.template-btn-smart:focus,
+.action-icon-btn:focus,
+.btn-save-smart:focus,
+.btn-cancel-smart:focus,
+.date-tab:focus {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
