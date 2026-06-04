@@ -7,6 +7,8 @@
   display: flex; align-items: center; justify-content: center;
   pointer-events: all;
   animation: anim-in 0.25s ease-out both;
+  will-change: opacity;
+  contain: strict;
 }
 .card-anim-overlay.closing { animation: anim-out 0.4s ease-in forwards; }
 @keyframes anim-in  { from { opacity:0 } to   { opacity:1 } }
@@ -53,7 +55,7 @@
   position: relative;
   filter: drop-shadow(0 -6px 16px rgba(163,113,247,0.8));
 }
-.ch-cross {
+.card-anim-overlay .ch-cross {
   position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
   font-size: 1.8rem; color: #fbbf24;
   animation: cross-pulse 0.5s ease-in-out infinite alternate;
@@ -67,7 +69,7 @@
   padding: 18px 18px 0; display: flex; flex-direction: column; align-items: center; gap: 10px;
   box-shadow: 0 0 30px rgba(163,113,247,0.3); position: relative;
 }
-.ch-win {
+.card-anim-overlay .ch-win {
   position: absolute; top: 14px; width: 30px; height: 44px;
   background: #a371f7; border-radius: 50% 50% 0 0;
   box-shadow: 0 0 14px rgba(163,113,247,1);
@@ -131,7 +133,7 @@
 .bonus-sky {
   position: absolute; top:0; left:0; right:0; height:45%; overflow: hidden;
 }
-.bonus-cloud {
+.card-anim-overlay .bonus-cloud {
   position: absolute; font-size: 2rem; opacity: 0.4;
   animation: cloud-drift linear infinite;
 }
@@ -159,7 +161,7 @@
   background: repeating-linear-gradient(90deg,#d4a017 0px,#d4a017 30px,transparent 30px,transparent 50px);
   opacity:0.6;
 }
-.bonus-coin-path {
+.card-anim-overlay .bonus-coin-path {
   position: absolute; bottom: 28%; font-size: 1.8rem;
   transform: translateY(-50%);
   animation: coin-bounce 0.4s ease-in-out infinite alternate, coin-collected ease-in-out forwards;
@@ -194,7 +196,7 @@
 @keyframes chest-appear { from{transform:scale(0) rotate(-10deg);opacity:0} to{transform:scale(1);opacity:1} }
 @keyframes chest-shake  { from{transform:rotate(-5deg)} to{transform:rotate(5deg)} }
 @keyframes chest-hide   { to{opacity:0;transform:scale(0)} }
-.bonus-chest-open {
+.card-anim-overlay .bonus-chest-open {
   position: absolute; bottom:28%; right:8%; font-size:4.5rem; opacity:0;
   animation: chest-open-appear 0.4s ease-out 2.0s forwards,
              chest-pulse 0.4s ease-in-out 2.4s infinite alternate;
@@ -226,8 +228,8 @@
   font-size:1.6rem; font-weight:700; color:#fbbf24;
   font-family:'Cairo',sans-serif; white-space:nowrap;
   text-shadow:0 0 20px #fbbf24, 0 2px 8px rgba(0,0,0,0.8);
-  animation: bonus-text-in 0.5s ease-out 0.2s both,
-             bonus-text-glow 0.6s ease-in-out 0.7s infinite alternate;
+  animation: bonus-text-in 0.5s ease-out 0.2s both;
+  /* glow removed - performance */
 }
 @keyframes bonus-text-in  { from{opacity:0;transform:translateX(-50%) scale(0.5)} to{opacity:1;transform:translateX(-50%) scale(1)} }
 @keyframes bonus-text-glow{ from{text-shadow:0 0 10px #fbbf24} to{text-shadow:0 0 30px #fbbf24,0 0 60px #f59e0b} }
@@ -318,7 +320,7 @@
   position: absolute; bottom:25%; left:0; right:0; height:22px;
   background:#1a1a2e; border-top:2px solid #ff4444; border-bottom:2px solid #fff;
 }
-.race-finish {
+.card-anim-overlay .race-finish {
   position: absolute; bottom:27%; right:8%; font-size:2.5rem;
   animation: finish-appear 0.4s ease-out 0.2s both,
              finish-wave 0.5s ease-in-out 0.6s infinite alternate;
@@ -362,8 +364,7 @@
   font-size:1.6rem; font-weight:700; color:#fbbf24;
   font-family:'Cairo',sans-serif; white-space:nowrap;
   text-shadow:0 0 20px #fbbf24, 0 2px 8px rgba(0,0,0,0.8);
-  animation: race-text-in 0.5s ease-out 0.3s both,
-             race-glow 0.7s ease-in-out 0.8s infinite alternate;
+  animation: race-text-in 0.5s ease-out 0.3s both;
 }
 @keyframes race-text-in { from{opacity:0;transform:translateX(-50%) scale(0.4)} to{opacity:1;transform:translateX(-50%) scale(1)} }
 @keyframes race-glow    { from{text-shadow:0 0 10px #fbbf24} to{text-shadow:0 0 35px #fbbf24,0 0 70px #f59e0b} }

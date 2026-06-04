@@ -26,7 +26,7 @@ import CreateBonusMissions from './components/Admin/CreateBonusMissions';
 // ── Card Animation Context ──────────────────────────
 export const AnimContext = React.createContext(null);
 
-function CardAnimOverlay({ anim, onDone }) {
+const CardAnimOverlay = React.memo(function CardAnimOverlay({ anim, onDone }) {
   React.useEffect(() => {
     if (!anim) return;
     const t = setTimeout(onDone, 2200);
@@ -103,7 +103,7 @@ function CardAnimOverlay({ anim, onDone }) {
       )}
     </div>
   );
-}
+});
 
 function App() {
   const [user, setUser] = useState(null);
@@ -139,6 +139,8 @@ function App() {
     setTimeout(() => setCardAnim(null), 2200);
   }, []);
 
+  const clearCardAnim = React.useCallback(() => setCardAnim(null), []);
+
   if (loading) {
     return (
       <div className="loading-screen">
@@ -152,7 +154,7 @@ function App() {
     <AnimContext.Provider value={handleCardNav}>
     <Router>
       <div className="App">
-        <CardAnimOverlay anim={cardAnim} onDone={() => setCardAnim(null)} />
+        <CardAnimOverlay anim={cardAnim} onDone={clearCardAnim} />
         <Routes>
           {/* Login Route */}
           <Route 
