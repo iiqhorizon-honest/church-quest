@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { supabase } from '../../supabaseClient';
+import { AnimContext } from '../../App';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './StudentDashboard.css';
 
@@ -65,7 +66,6 @@ function StudentDashboard({ user, onLogout }) {
   const [toast,             setToast]             = useState(null);
   const [isOnline,          setIsOnline]          = useState(navigator.onLine);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [churchAnim,        setChurchAnim]        = useState(null); // { path }
 
   // ── Toast ──
   const toastTimerRef = useRef(null);
@@ -233,18 +233,20 @@ function StudentDashboard({ user, onLogout }) {
     markNotificationsRead();
   }, [markNotificationsRead]);
 
+  const triggerCardAnim = React.useContext(AnimContext);
+
   const handleNavClick = useCallback((path) => {
     if (path === '__logout__') setShowLogoutConfirm(true);
     else navigate(path);
   }, [navigate]);
 
   const handleCardClick = useCallback((card) => {
-    setChurchAnim({ path: card.path, type: card.anim });
-    setTimeout(() => {
-      setChurchAnim(null);
+    if (triggerCardAnim) {
+      triggerCardAnim(card.anim, card.path, navigate);
+    } else {
       navigate(card.path);
-    }, 2000);
-  }, [navigate]);
+    }
+  }, [navigate, triggerCardAnim]);
 
   // ── Computed ──
   const unreadCount     = useMemo(() => notifications.filter(n => !n.is_read).length, [notifications]);
@@ -286,68 +288,6 @@ function StudentDashboard({ user, onLogout }) {
       <div className="bg-particle bg-particle-3" />
       <div className="bg-particle bg-particle-4" />
       <div className="bg-particle bg-particle-5" />
-
-      {/* Card Animations */}
-      {churchAnim && (
-        <div className="card-anim-overlay">
-
-          {/* MISSIONS: Church door */}
-          {churchAnim.type === 'church' && (
-            <div className="anim-scene anim-church">
-              <div className="ch-building">
-                <div className="ch-roof"><span className="ch-cross">✝</span></div>
-                <div className="ch-facade">
-                  <div className="ch-win ch-win-l" /><div className="ch-win ch-win-r" />
-                  <div className="ch-door-frame">
-                    <div className="ch-door ch-door-l" />
-                    <div className="ch-door ch-door-r" />
-                    <div className="ch-door-light" />
-                  </div>
-                </div>
-              </div>
-              <div className="ch-ground" />
-              {[...Array(10)].map((_,i) => <div key={i} className={`ch-spark sp${i}`} />)}
-              <div className="anim-label">المهمات 📋</div>
-            </div>
-          )}
-
-          {/* BONUS: Stars rain */}
-          {churchAnim.type === 'stars' && (
-            <div className="anim-scene anim-stars">
-              <div className="stars-moon">🌙</div>
-              {[...Array(16)].map((_,i) => <div key={i} className={`star-rain sr${i}`}>⭐</div>)}
-              <div className="stars-big-star">🌟</div>
-              <div className="stars-text">بونص جديد!</div>
-              <div className="anim-label">البونص ⭐</div>
-            </div>
-          )}
-
-          {/* SHOP: Cart with coins */}
-          {churchAnim.type === 'cart' && (
-            <div className="anim-scene anim-cart">
-              <div className="cart-road" />
-              <div className="cart-car">🛒</div>
-              {[...Array(8)].map((_,i) => <div key={i} className={`cart-coin cc${i}`}>🪙</div>)}
-              <div className="cart-shop">🏪</div>
-              <div className="anim-label">المتجر 🛒</div>
-            </div>
-          )}
-
-          {/* LEADERBOARD: Trophy + confetti */}
-          {churchAnim.type === 'trophy' && (
-            <div className="anim-scene anim-trophy">
-              {[...Array(20)].map((_,i) => <div key={i} className={`confetti cf${i}`} />)}
-              <div className="trophy-cup">🏆</div>
-              <div className="trophy-rays">
-                {[...Array(8)].map((_,i) => <div key={i} className={`trophy-ray tr${i}`} />)}
-              </div>
-              <div className="trophy-text">انت الأفضل! 🎉</div>
-              <div className="anim-label">الصدارة 🏆</div>
-            </div>
-          )}
-
-        </div>
-      )}
 
       {toast && <div className={`toast-smart ${toast.type}`}>{toast.message}</div>}
 
