@@ -623,7 +623,7 @@
 .student-dashboard-page .nav-item {
   flex: 1; background: transparent; border: none;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: .2rem; padding: .5rem .25rem;
+  gap: .15rem; padding: .4rem .1rem;
   cursor: pointer; transition: all .2s;
   color: var(--text-3); position: relative;
   font-family: var(--font-b);
@@ -652,7 +652,7 @@
 .student-dashboard-page .nav-item.nav-logout:active { transform: scale(.9); }
 
 .student-dashboard-page .nav-icon {
-  font-size: 1.45rem;
+  font-size: 1.2rem;
   transition: transform .2s, filter .2s;
   position: relative; z-index: 1;
   line-height: 1;
@@ -662,8 +662,8 @@
   filter: drop-shadow(0 0 6px rgba(251,191,36,.7));
 }
 .student-dashboard-page .nav-text {
-  font-size: .65rem; font-weight: 700;
-  letter-spacing: .3px;
+  font-size: .55rem; font-weight: 700;
+  letter-spacing: .2px;
   position: relative; z-index: 1;
 }
 .student-dashboard-page .nav-item.active .nav-text {

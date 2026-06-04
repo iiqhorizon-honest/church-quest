@@ -37,10 +37,11 @@ const ACTION_CARDS = [
 ];
 
 const NAV_ITEMS = [
-  { icon: '🏠', label: 'الرئيسية', path: '/student'          },
-  { icon: '📋', label: 'المهمات',  path: '/student/missions' },
-  { icon: '🛒', label: 'المتجر',   path: '/student/shop'     },
-  { icon: '🚪', label: 'خروج',     path: '__logout__'        },
+  { icon: '🏠', label: 'الرئيسية', path: '/student'             },
+  { icon: '📋', label: 'المهمات',  path: '/student/missions'    },
+  { icon: '⭐', label: 'البونص',   path: '/student/bonus'       },
+  { icon: '🛒', label: 'المتجر',   path: '/student/shop'        },
+  { icon: '🚪', label: 'خروج',     path: '__logout__'           },
 ];
 
 // ══════════════════════════════════════════

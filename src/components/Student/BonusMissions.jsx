@@ -11,10 +11,9 @@ function StudentBonusMissions({ user }) {
 
   useEffect(() => {
     if (user?.student?.id) {
-      fetchActiveMissions();
-      fetchStudentData();
+      Promise.all([fetchActiveMissions(), fetchStudentData()]);
     } else {
-      setLoading(false); // ✅ مش هيفضل loading لو مفيش user
+      setLoading(false);
     }
   }, [user?.student?.id]);
 
@@ -95,22 +94,17 @@ function StudentBonusMissions({ user }) {
         </div>
       </div>
 
-      {/* ===== STICKY NAVBAR ===== */}
+      {/* ===== HEADER ===== */}
       <header className="header">
-        {/* Back button - right side (RTL) */}
         <div className="header-left">
-          <button className="back-btn" onClick={() => navigate('/student')}>
-            ‹
-          </button>
+          <button className="back-btn" onClick={() => navigate('/student')}>‹</button>
         </div>
 
-        {/* Centered title */}
         <div className="header-center">
           <h3>⭐ مهمات البونص</h3>
           <p>تحديات أسبوعية بجوائز مميزة</p>
         </div>
 
-        {/* Coins - left side (RTL) */}
         <div className="header-right">
           {studentData && (
             <div className="coins-display">
