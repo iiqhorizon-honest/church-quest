@@ -31,18 +31,18 @@ const Cache = {
 // STATIC CONFIG (outside component — never re-created)
 // ══════════════════════════════════════════
 const ACTION_CARDS = [
-  { icon: '📋', title: 'المهمات', path: '/student/missions',    color: 'purple', anim: 'church'  },
-  { icon: '⭐', title: 'البونص',  path: '/student/bonus',       color: 'orange', anim: 'stars'   },
-  { icon: '🛒', title: 'المتجر',  path: '/student/shop',        color: 'blue',   anim: 'cart'    },
-  { icon: '🏆', title: 'الصدارة', path: '/student/leaderboard', color: 'green',  anim: 'trophy'  },
+  { icon: '📋', title: 'Daily Missions', path: '/student/missions',    color: 'purple', anim: 'church'  },
+  { icon: '⭐', title: 'Bonus',  path: '/student/bonus',       color: 'orange', anim: 'stars'   },
+  { icon: '🛒', title: 'الكانتين',  path: '/student/shop',        color: 'blue',   anim: 'cart'    },
+  { icon: '🏆', title: 'Leader Board', path: '/student/leaderboard', color: 'green',  anim: 'trophy'  },
 ];
 
 const NAV_ITEMS = [
   { icon: '🏠', label: 'الرئيسية', path: '/student'             },
-  { icon: '📋', label: 'المهمات',  path: '/student/missions'    },
-  { icon: '⭐', label: 'البونص',   path: '/student/bonus'       },
-  { icon: '🛒', label: 'المتجر',   path: '/student/shop'        },
-  { icon: '🚪', label: 'خروج',     path: '__logout__'           },
+  { icon: '📋', label: 'Daily Missions',  path: '/student/missions'    },
+  { icon: '⭐', label: 'Bonus',   path: '/student/bonus'       },
+  { icon: '🛒', label: 'الكانتين',   path: '/student/shop'        },
+  { icon: '🚪', label: 'Log out',     path: '__logout__'           },
 ];
 
 // ══════════════════════════════════════════
@@ -66,6 +66,9 @@ function StudentDashboard({ user, onLogout }) {
   const [toast,             setToast]             = useState(null);
   const [isOnline,          setIsOnline]          = useState(navigator.onLine);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [levelUpPopup,      setLevelUpPopup]      = useState(null);   // { newLevel }
+  const [rankDropPopup,     setRankDropPopup]      = useState(null);   // { lostBy }
+  const [streakPopup,       setStreakPopup]        = useState(null);   // { count }
 
   // ── Toast ──
   const toastTimerRef = useRef(null);
@@ -85,7 +88,7 @@ function StudentDashboard({ user, onLogout }) {
   // ── Fetch ──
   const fetchStudent = useCallback(async () => {
     const { data, error } = await supabase
-      .from('students').select('id, name, coins')
+      .from('students').select('id, name, coins, last_rank, last_level, last_login_date, streak_count')
       .eq('id', user.student.id).single();
     if (error) throw error;
     if (isMountedRef.current) {
@@ -105,6 +108,50 @@ function StudentDashboard({ user, onLogout }) {
       Cache.set('notifs', data || []);
     }
   }, [user]);
+
+  // ── Check streak, level-up, rank drop after data loads ──
+  // FIX: runChecks معرّف قبل loadData عشان loadData يقدر يستخدمه
+  const runChecks = useCallback(async (data) => {
+    if (!data) return;
+    const today = new Date().toISOString().split('T')[0];
+    const updates = {};
+
+    // ── Streak ──
+    const last = data.last_login_date;
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    let newStreak = data.streak_count ?? 0;
+    if (last !== today) {
+      newStreak = last === yesterday ? newStreak + 1 : 1;
+      updates.last_login_date = today;
+      updates.streak_count    = newStreak;
+      if (newStreak >= 2) setStreakPopup({ count: newStreak });
+    }
+
+    // ── Level up ──
+    const newLevel = Math.min(Math.floor((data.coins ?? 0) / COINS_PER_LEVEL) + 1, MAX_LEVEL);
+    const oldLevel = data.last_level ?? 1;
+    if (newLevel > oldLevel) {
+      updates.last_level = newLevel;
+      setLevelUpPopup({ newLevel });
+    }
+
+    // ── Rank drop check ──
+    const { data: allStudents } = await supabase
+      .from('students').select('id, coins').order('coins', { ascending: false });
+    if (allStudents) {
+      const newRank = allStudents.findIndex(s => s.id === data.id) + 1;
+      const oldRank = data.last_rank ?? 0;
+      if (oldRank > 0 && newRank > oldRank) {
+        setRankDropPopup({ lostBy: newRank - oldRank });
+      }
+      updates.last_rank = newRank;
+    }
+
+    // ── Save updates ──
+    if (Object.keys(updates).length > 0) {
+      await supabase.from('students').update(updates).eq('id', data.id);
+    }
+  }, []);
 
   const loadData = useCallback(async (silent = false) => {
     if (!silent) {
@@ -130,9 +177,13 @@ function StudentDashboard({ user, onLogout }) {
         setNotifications(Cache.get('notifs')?.data || []);
       }
     } finally {
-      if (isMountedRef.current) setLoading(false);
+      if (isMountedRef.current) {
+        setLoading(false);
+        const fresh = Cache.get('student')?.data;
+        if (fresh) runChecks(fresh);
+      }
     }
-  }, [showToast, fetchStudent, fetchNotifications]);
+  }, [showToast, fetchStudent, fetchNotifications, runChecks]);
 
   // FIX 2: refreshOnReconnect uses refs to avoid stale closures
   const fetchStudentRef      = useRef(fetchStudent);
@@ -204,8 +255,16 @@ function StudentDashboard({ user, onLogout }) {
         filter: `id=eq.${user.student.id}`,
       }, ({ new: updated }) => {
         if (!isMountedRef.current) return;
-        const safe = { id: updated.id, name: updated.name, coins: updated.coins };
-        setStudentData(safe);
+        const safe = { id: updated.id, name: updated.name, coins: updated.coins,
+          last_rank: updated.last_rank, last_level: updated.last_level,
+          last_login_date: updated.last_login_date, streak_count: updated.streak_count };
+        setStudentData(prev => {
+          // check level up from realtime
+          const oldLevel = Math.min(Math.floor((prev?.coins ?? 0) / COINS_PER_LEVEL) + 1, MAX_LEVEL);
+          const newLevel = Math.min(Math.floor((updated.coins ?? 0) / COINS_PER_LEVEL) + 1, MAX_LEVEL);
+          if (newLevel > oldLevel) setLevelUpPopup({ newLevel });
+          return safe;
+        });
         Cache.set('student', safe);
       })
       .subscribe();
@@ -267,7 +326,7 @@ function StudentDashboard({ user, onLogout }) {
             <div className="logo-spinner" />
           </div>
           <p className="loading-text">جاري التحميل...</p>
-          <p className="loading-hint">💡 البيانات تُحفظ محليًا للعمل بدون إنترنت</p>
+          <p className="loading-hint">💡 </p>
         </div>
       </div>
     );
@@ -291,12 +350,55 @@ function StudentDashboard({ user, onLogout }) {
 
       {toast && <div className={`toast-smart ${toast.type}`}>{toast.message}</div>}
 
+      {/* 🎂 Level Up Popup */}
+      {levelUpPopup && (
+        <div className="feature-popup-overlay" onClick={() => setLevelUpPopup(null)}>
+          <div className="feature-popup levelup-popup" onClick={e => e.stopPropagation()}>
+            <div className="fp-emoji">🎂</div>
+            <h2 className="fp-title">Amazing!</h2>
+            <p className="fp-msg">وصلت المستوى <strong>{levelUpPopup.newLevel}</strong></p>
+            <div className="fp-stars">⭐⭐⭐</div>
+            <button className="fp-btn" onClick={() => setLevelUpPopup(null)}>يييه! 🎉</button>
+          </div>
+        </div>
+      )}
+
+      {/* 🔔 Rank Drop Popup */}
+      {rankDropPopup && (
+        <div className="feature-popup-overlay" onClick={() => setRankDropPopup(null)}>
+          <div className="feature-popup rankdrop-popup" onClick={e => e.stopPropagation()}>
+            <div className="fp-emoji">🔔</div>
+            <h2 className="fp-title">حد تفوق عليك!</h2>
+            <p className="fp-msg">مركزك نزل <strong>{rankDropPopup.lostBy}</strong> {rankDropPopup.lostBy === 1 ? 'مركز' : 'مراكز'}</p>
+            <p className="fp-sub">اعمل مهمات أكتر وارجع للأول 💪</p>
+            <button className="fp-btn" onClick={() => setRankDropPopup(null)}>هتعدي! 💪</button>
+          </div>
+        </div>
+      )}
+
+      {/* 🔥 Streak Popup */}
+      {streakPopup && (
+        <div className="feature-popup-overlay" onClick={() => setStreakPopup(null)}>
+          <div className="feature-popup streak-popup" onClick={e => e.stopPropagation()}>
+            <div className="fp-emoji">🔥</div>
+            <h2 className="fp-title">{streakPopup.count} أيام متتالية!</h2>
+            <p className="fp-msg">إنت بتدخل كل يوم، برافو عليك! 🌟</p>
+            <div className="fp-streak-dots">
+              {[...Array(Math.min(streakPopup.count, 7))].map((_,i) => (
+                <span key={i} className="streak-dot">🔥</span>
+              ))}
+            </div>
+            <button className="fp-btn" onClick={() => setStreakPopup(null)}>شكراً! 😊</button>
+          </div>
+        </div>
+      )}
+
       {/* Logout Confirm */}
       {showLogoutConfirm && (
         <div className="logout-overlay" onClick={() => setShowLogoutConfirm(false)}>
           <div className="logout-popup" onClick={e => e.stopPropagation()}>
             <div className="logout-icon">🚪</div>
-            <h2 className="logout-title">هتخرج؟</h2>
+            <h2 className="logout-title">🥹هتخرج؟</h2>
             <p className="logout-subtitle">متأكد إنك عايز تخرج دلوقتي؟</p>
             <div className="logout-btns">
               <button className="logout-btn-yes" onClick={onLogout}>
@@ -325,14 +427,14 @@ function StudentDashboard({ user, onLogout }) {
             <div className="header-center">
               <h1 className="header-name">
                 <span className="header-greeting">مرحباً،</span>
-                <span className="header-username">{firstName}</span>
+                <span className="header-username header-username-big">{firstName}</span>
                 <span className="header-wave">👋</span>
               </h1>
               <div className={`header-status ${isOnline ? 'online' : 'offline'}`}>
                 <span className="status-dot" />
               </div>
             </div>
-            <div className="header-logo">🎓</div>
+            <div className="header-logo">🤵</div>
           </div>
         </div>
       </header>
@@ -342,7 +444,7 @@ function StudentDashboard({ user, onLogout }) {
         <div className="notifications-overlay" onClick={() => setShowNotifications(false)}>
           <div className="notifications-panel" onClick={e => e.stopPropagation()}>
             <div className="panel-header">
-              <h3>🔔 الإشعارات</h3>
+              <h3>🔔 Notfications</h3>
               <button className="close-btn" onClick={() => setShowNotifications(false)}>✕</button>
             </div>
             <div className="notifications-list">
@@ -374,8 +476,8 @@ function StudentDashboard({ user, onLogout }) {
           {/* Coins Hero */}
           <div className="coins-card-large" onClick={() => navigate('/student/shop')}>
             <div className="coins-header">
-              <span className="coins-label">رصيدك الحالي</span>
-              <span className="level-badge-large">⭐ المستوى {currentLevel}</span>
+              <span className="coins-label"> Your coins</span>
+              <span className="level-badge-large">⭐ Level {currentLevel}</span>
             </div>
             <div className="coins-value-large">
               <span className="coin-icon-large">🪙</span>
@@ -386,7 +488,7 @@ function StudentDashboard({ user, onLogout }) {
           {/* XP Progress */}
           <div className="progress-card-smart">
             <div className="progress-header">
-              <span className="progress-title">📊 تقدم المستوى {currentLevel}</span>
+              <span className="progress-title">📊  Level {currentLevel}</span>
               <span className="progress-coins">{progressInLevel}/{COINS_PER_LEVEL} 🪙</span>
             </div>
             <div className="progress-bar-wrapper">
@@ -395,13 +497,13 @@ function StudentDashboard({ user, onLogout }) {
               </div>
             </div>
             <p className="progress-hint">
-              💡 {coinsNeeded} عملة للوصول إلى المستوى {currentLevel + 1}
+              💡 {coinsNeeded} كوينز للوصول إلى المستوى {currentLevel + 1}
             </p>
           </div>
 
           {/* Quick Actions */}
           <div className="section-smart">
-            <h3 className="section-title-smart">⚡ الإجراءات السريعة</h3>
+            <h3 className="section-title-smart">⚡ Options </h3>
             <div className="quick-grid-smart">
               {ACTION_CARDS.map((card) => (
                 <div

@@ -11,6 +11,10 @@ const RANK_LABELS = {
 
 const MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
+const COINS_PER_LEVEL = 100;
+const MAX_LEVEL       = 50;
+const calcLevel = (coins) => Math.min(Math.floor((coins ?? 0) / COINS_PER_LEVEL) + 1, MAX_LEVEL);
+
 const REFRESH_INTERVAL = 60000; // FIX 6: 60s بدل 30s
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
@@ -28,11 +32,11 @@ const PodiumMobileItem = React.memo(({ student, rank, isMe, compact = false }) =
       <div className="slb-podium-info">
         <h3>
           {student.name}
-          {isMe && <span className="slb-you-tag">أنت</span>}
+          {isMe && <span className="slb-you-tag">u</span>}
         </h3>
         <div className="slb-podium-stats">
           <span className="slb-coins">{student.coins} 🪙</span>
-          {student.level && <span className="slb-level">⭐ Lv.{student.level}</span>}
+          <span className="slb-level">⭐ Lv.{calcLevel(student.coins)}</span>
         </div>
       </div>
     </div>
@@ -51,7 +55,7 @@ const LeaderboardItem = React.memo(({ student, rank, isMe }) => (
         {student.name}
         {isMe && <span className="slb-you-badge">أنت</span>}
       </div>
-      {student.level && <div className="slb-lb-level">⭐ Level {student.level}</div>}
+      <div className="slb-lb-level">⭐ Level {calcLevel(student.coins)}</div>
     </div>
     <div className="slb-lb-coins">{student.coins} 🪙</div>
   </div>
@@ -68,10 +72,10 @@ const MotivationCard = React.memo(({ navigate }) => (
     <p>أكمل المهمات لكسب المزيد من العملات</p>
     <div className="slb-motivation-btns">
       <button className="slb-mot-btn primary" onClick={() => navigate('/student/missions')}>
-        📋 المهمات اليومية
+        📋 Daily Missions
       </button>
       <button className="slb-mot-btn secondary" onClick={() => navigate('/student/bonus')}>
-        ⭐ مهمات البونص
+        ⭐ Bonus
       </button>
     </div>
   </div>
@@ -198,7 +202,7 @@ function StudentLeaderboard({ user, onLogout }) {
             ←
           </button>
           <div className="slb-header-center">
-            <h1 className="slb-header-title">🏆 لوحة الصدارة</h1>
+            <h1 className="slb-header-title">🏆  Leader board</h1>
           </div>
           <button
             className={`slb-refresh-btn${refreshing ? ' spinning' : ''}`}
@@ -215,7 +219,7 @@ function StudentLeaderboard({ user, onLogout }) {
       {currentStudent && (
         <div className="slb-coins-strip">
           <div className="slb-coins-strip-inner">
-            <span className="slb-coins-strip-label">رصيدك الحالي</span>
+            <span className="slb-coins-strip-label"> Your coins</span>
             <div className="slb-coins-strip-value">
               <span className="slb-coin-icon-large">🪙</span>
               <span className="slb-coin-number">{currentStudent.coins.toLocaleString('ar-EG')}</span>
@@ -244,7 +248,7 @@ function StudentLeaderboard({ user, onLogout }) {
         {/* Podium Top 3 */}
         {students.length >= 3 && (
           <div className="slb-podium">
-            <div className="slb-podium-header"><h2>🏅 أفضل 3 طلاب</h2></div>
+            <div className="slb-podium-header"><h2>🏅 Top Three</h2></div>
             <PodiumMobileItem student={students[0]} rank={1} isMe={students[0].id === user?.student?.id} />
             <div className="slb-podium-row">
               <PodiumMobileItem student={students[1]} rank={2} isMe={students[1].id === user?.student?.id} compact />
@@ -297,19 +301,19 @@ function StudentLeaderboard({ user, onLogout }) {
       <nav className="slb-bottom-nav">
         <button className="slb-nav-item active" onClick={() => navigate('/student/leaderboard')}>
           <span className="slb-nav-icon">🏆</span>
-          <span className="slb-nav-text">الصدارة</span>
+          <span className="slb-nav-text">Leader Board</span>
         </button>
         <button className="slb-nav-item" onClick={() => navigate('/student')}>
           <span className="slb-nav-icon">🏠</span>
-          <span className="slb-nav-text">الرئيسية</span>
+          <span className="slb-nav-text">Home</span>
         </button>
         <button className="slb-nav-item" onClick={() => navigate('/student/missions')}>
           <span className="slb-nav-icon">📋</span>
-          <span className="slb-nav-text">المهمات</span>
+          <span className="slb-nav-text">MIssions</span>
         </button>
         <button className="slb-nav-item" onClick={() => navigate('/student/shop')}>
           <span className="slb-nav-icon">🛒</span>
-          <span className="slb-nav-text">المتجر</span>
+          <span className="slb-nav-text">الكانتين</span>
         </button>
       </nav>
     </div>

@@ -551,7 +551,7 @@ function StudentShop({ user, onLogout }) {
       <header className="header">
         <div className="header-content">
           <div className="header-title">
-            <h1>🕹️ متجر النجوم</h1>
+            <h1>  🕹️ الكانتين </h1>
           </div>
           <div className="header-bottom">
             <div className="coins-display">

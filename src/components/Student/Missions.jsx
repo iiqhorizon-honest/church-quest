@@ -333,7 +333,7 @@ function StudentMissions({ user }) {
                   <div className="sm-streak-card__number">{currentStreak}</div>
                 </div>
                 <div className="sm-streak-card__details">
-                  <h3>سلسلة النجاح</h3>
+                  <h3>سلسلة الاستمرارية</h3>
                   <p>
                     {currentStreak === 0
                       ? 'ابدأ سلسلتك اليوم!'
@@ -353,7 +353,7 @@ function StudentMissions({ user }) {
 
               {leaderboard.length > 0 && (
                 <div className="sm-leaderboard">
-                  <h4>🏆 متصدرو اليوم</h4>
+                  <h4>🏆 Today's leaders</h4>
                   <div className="sm-leaderboard__list">
                     {leaderboard.map((student, idx) => (
                       <div key={idx} className="sm-leaderboard__item">

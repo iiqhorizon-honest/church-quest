@@ -50,7 +50,7 @@ const CardAnimOverlay = React.memo(function CardAnimOverlay({ anim, onDone }) {
           </div>
           <div className="ch-ground" />
           {[...Array(10)].map((_,i) => <div key={i} className={`ch-spark sp${i}`} />)}
-          <div className="anim-label">المهمات 📋</div>
+          <div className="anim-label">Daily missions 📋</div>
         </div>
       )}
       {anim.type === 'stars' && (
@@ -69,7 +69,7 @@ const CardAnimOverlay = React.memo(function CardAnimOverlay({ anim, onDone }) {
             {[...Array(10)].map((_,i) => <div key={i} className={`bcb${i}`}>🪙</div>)}
           </div>
           <div className="bonus-text">اجمع العملات! 🏃</div>
-          <div className="anim-label">البونص ⭐</div>
+          <div className="anim-label">Bonus ⭐</div>
         </div>
       )}
       {anim.type === 'cart' && (
@@ -97,8 +97,8 @@ const CardAnimOverlay = React.memo(function CardAnimOverlay({ anim, onDone }) {
             <div className="podium-1">🏆<span>1</span></div>
             <div className="podium-3">🥉<span>3</span></div>
           </div>
-          <div className="race-text">من الأول النهارده؟ 🏆</div>
-          <div className="anim-label">الصدارة 🏆</div>
+          <div className="race-text">مين الأول النهارده؟ 🏆</div>
+          <div className="anim-label">Leader Board 🏆</div>
         </div>
       )}
     </div>
