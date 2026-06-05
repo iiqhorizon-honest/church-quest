@@ -40,6 +40,8 @@
 .ch-building {
   display: flex; flex-direction: column; align-items: center;
   animation: church-zoom 2s ease-in-out forwards;
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 @keyframes church-zoom {
   0%   { transform: scale(0.4) translateY(60px); opacity:0 }
@@ -88,6 +90,8 @@
   background: linear-gradient(180deg, #3d1f6b, #2d1b4e);
   animation-duration: 1s; animation-timing-function: cubic-bezier(0.4,0,0.2,1);
   animation-fill-mode: forwards; animation-delay: 0.7s;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 .ch-door-l { left:0; border-radius:50% 0 0 0; transform-origin:left top;  animation-name:dl }
 .ch-door-r { right:0; border-radius:0 50% 0 0; transform-origin:right top; animation-name:dr }
@@ -371,4 +375,51 @@
 
 @media (prefers-reduced-motion: reduce) {
   .card-anim-overlay { display:none !important; }
+}
+
+
+/* ══════════════════════════════════════════════════
+   MOBILE PERFORMANCE — تخفيف الأنيميشن على الموبايل
+══════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* الكنيسة — شيل الـ scale الكبير وخليها تختفي بس */
+  @keyframes church-zoom {
+    0%   { transform: scale(0.5) translateY(30px); opacity: 0 }
+    25%  { transform: scale(1)   translateY(0);    opacity: 1 }
+    80%  { transform: scale(1)   translateY(0);    opacity: 1 }
+    100% { transform: scale(2.5) translateY(20px); opacity: 0 }
+  }
+
+  /* الأبواب — شيل الـ perspective وخليها تتفتح بشكل أبسط */
+  @keyframes dl { 0%{transform:rotateY(0)} 100%{transform:rotateY(-70deg)} }
+  @keyframes dr { 0%{transform:rotateY(0)} 100%{transform:rotateY(70deg)}  }
+
+  /* شيل الـ will-change بعد ما الأنيميشن يخلص */
+  .card-anim-overlay.closing { will-change: auto; }
+
+  /* السحاب في البونص — قلل العدد بـ CSS */
+  .bc2,.bc3,.bc4,.bc7,.bc8,.bc9,.bc10,.bc11 { display: none; }
+
+  /* الكونفيتي في الصدارة — قلل العدد */
+  .cf3,.cf5,.cf7,.cf9,.cf11,.cf13,.cf15,.cf17,.cf19,.cf21,.cf23 { display: none; }
+
+  /* قلل مدة الأنيميشن عموماً */
+  .anim-scene * { animation-duration: calc(var(--dur, 1s) * 0.85) !important; }
+}
+
+/* موبايل صغير جداً */
+@media (max-width: 380px) {
+  @keyframes church-zoom {
+    0%   { transform: scale(0.6); opacity: 0 }
+    25%  { transform: scale(1);   opacity: 1 }
+    80%  { transform: scale(1);   opacity: 1 }
+    100% { transform: scale(1.8); opacity: 0 }
+  }
+
+  /* شيل الشرارات على الشاشات الصغيرة */
+  .ch-spark { display: none; }
+
+  /* شيل السحاب كله */
+  .bonus-cloud { display: none; }
 }
