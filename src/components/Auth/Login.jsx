@@ -99,7 +99,7 @@ function Login({ onLogin }) {
       setUsername('admin@church.com');
       setPassword('224410');
     } else {
-      setUsername('JohnHani@gmail.com');
+      setUsername('PeterMaged@gmail.com');
       setPassword('Am1234555');
     }
   };
