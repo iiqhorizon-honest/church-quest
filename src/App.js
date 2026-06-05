@@ -48,39 +48,51 @@ const CardAnimOverlay = React.memo(function CardAnimOverlay({ anim, onDone }) {
         </div>
       )}
       {anim.type === 'stars' && (
-        <div className="anim-scene anim-star">
-          <div className="star-glow-bg" />
-          <div className="star-main">⭐</div>
-          {[...Array(8)].map((_,i) => <div key={i} className={`star-orbit so${i}`}>✨</div>)}
-          {[...Array(10)].map((_,i) => <div key={i} className={`star-ray sr${i}`} />)}
-          <div className="star-label">البونص ⭐</div>
+        <div className="anim-scene anim-bonus">
+          <div className="bonus-sky">
+            {[...Array(12)].map((_,i) => <div key={i} className={`bonus-cloud bc${i}`}>🌤</div>)}
+          </div>
+          <div className="bonus-ground" />
+          <div className="bonus-path">
+            {[...Array(6)].map((_,i) => <div key={i} className={`bonus-coin-path bcp${i}`}>🪙</div>)}
+          </div>
+          <div className="bonus-runner">🏃</div>
+          <div className="bonus-chest">💰</div>
+          <div className="bonus-chest-open">🎁</div>
+          <div className="bonus-coins-burst">
+            {[...Array(10)].map((_,i) => <div key={i} className={`bcb${i}`}>🪙</div>)}
+          </div>
+          <div className="bonus-text">اجمع العملات! 🏃</div>
+          <div className="anim-label">البونص ⭐</div>
         </div>
       )}
       {anim.type === 'cart' && (
-        <div className="anim-scene anim-coins">
-          <div className="coins-glow-bg" />
-          {[...Array(12)].map((_,i) => <div key={i} className={`falling-coin fc${i}`}>🪙</div>)}
-          <div className="coins-pile">
-            <div className="pile-coin pc1">🪙</div>
-            <div className="pile-coin pc2">🪙</div>
-            <div className="pile-coin pc3">🪙</div>
-            <div className="pile-coin pc4">🪙</div>
-            <div className="pile-coin pc5">🪙</div>
-          </div>
-          <div className="coins-label">المتجر 🛒</div>
+        <div className="anim-scene anim-cart">
+          <div className="cart-road" />
+          <div className="cart-car">🛒</div>
+          {[...Array(8)].map((_,i) => <div key={i} className={`cart-coin cc${i}`}>🪙</div>)}
+          <div className="cart-shop">🏪</div>
+          <div className="anim-label">المتجر 🛒</div>
         </div>
       )}
       {anim.type === 'trophy' && (
-        <div className="anim-scene anim-trophy-light">
-          <div className="trophy-glow-bg" />
-          <div className="trophy-main">🏆</div>
-          {[...Array(12)].map((_,i) => <div key={i} className={`trophy-ray-l trl${i}`} />)}
-          <div className="trophy-medals">
-            <div className="tm tm1">🥇</div>
-            <div className="tm tm2">🥈</div>
-            <div className="tm tm3">🥉</div>
+        <div className="anim-scene anim-race">
+          {[...Array(24)].map((_,i) => <div key={i} className={`confetti cf${i}`} />)}
+          <div className="race-track" />
+          <div className="race-finish">🏁</div>
+          <div className="race-runner race-r1">🏃</div>
+          <div className="race-runner race-r2">🏃</div>
+          <div className="race-runner race-r3">🏃</div>
+          <div className="race-badge race-b1">1🥇</div>
+          <div className="race-badge race-b2">2🥈</div>
+          <div className="race-badge race-b3">3🥉</div>
+          <div className="race-podium">
+            <div className="podium-2">🥈<span>2</span></div>
+            <div className="podium-1">🏆<span>1</span></div>
+            <div className="podium-3">🥉<span>3</span></div>
           </div>
-          <div className="trophy-label">الصدارة 🏆</div>
+          <div className="race-text">من الأول النهارده؟ 🏆</div>
+          <div className="anim-label">الصدارة 🏆</div>
         </div>
       )}
     </div>
