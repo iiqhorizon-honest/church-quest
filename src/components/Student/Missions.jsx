@@ -21,6 +21,7 @@ function StudentMissions({ user }) {
   const [leaderboard,        setLeaderboard]        = useState([]);
   const [toast,              setToast]              = useState({ show: false, message: '', type: '' });
   const [currentStreak,      setCurrentStreak]      = useState(0);
+  const serverTodayRef = useRef(null); // تاريخ السيرفر — مش تاريخ الجهاز
   const [streakMultiplier,   setStreakMultiplier]   = useState(1);
 
   // ✅ إصلاح #1: showToast بـ useRef للـ timer عشان نمنع memory leak
@@ -50,8 +51,21 @@ function StudentMissions({ user }) {
     if (isMountedRef.current) setStudentData(data);
   }, [user]);
 
+  // ── جيب التاريخ من السيرفر مش من الجهاز ──
+  const getServerToday = useCallback(async () => {
+    if (serverTodayRef.current) return serverTodayRef.current;
+    const { data, error } = await supabase.rpc('get_server_date');
+    if (error || !data) {
+      // fallback: استخدم UTC عادي لو الـ RPC مش موجود
+      serverTodayRef.current = new Date().toISOString().split('T')[0];
+    } else {
+      serverTodayRef.current = data;
+    }
+    return serverTodayRef.current;
+  }, []);
+
   const fetchTodayMissions = useCallback(async () => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = await getServerToday();
     const { data, error } = await supabase
       .from('daily_missions')
       .select('*')
@@ -59,10 +73,10 @@ function StudentMissions({ user }) {
       .order('id', { ascending: true });
     if (error) throw error;
     if (isMountedRef.current) setMissions(data || []);
-  }, []);
+  }, [getServerToday]);
 
   const fetchCompletedMissions = useCallback(async () => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = await getServerToday();
     const { data, error } = await supabase
       .from('mission_completions')
       .select('mission_id')
@@ -72,11 +86,11 @@ function StudentMissions({ user }) {
       .lt('completed_at', `${today}T23:59:59`);
     if (error) throw error;
     if (isMountedRef.current) setCompletedMissions(data?.map(m => m.mission_id) || []);
-  }, [user]);
+  }, [user, getServerToday]);
 
   const fetchLeaderboard = useCallback(async () => {
     try {
-      const today = new Date().toISOString().split('T')[0];
+      const today = await getServerToday();
       const { data, error } = await supabase
         .from('mission_completions')
         .select('student_id, students(name, coins)')
@@ -103,12 +117,12 @@ function StudentMissions({ user }) {
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
     }
-  }, []);
+  }, [getServerToday]);
 
   const calculateStreak = useCallback(async () => {
     try {
-      const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = await getServerToday();
+      const today = new Date(todayStr + 'T12:00:00Z');
 
       const yesterdayDate = new Date(today);
       yesterdayDate.setDate(yesterdayDate.getDate() - 1);
@@ -163,7 +177,7 @@ function StudentMissions({ user }) {
       console.error('Error calculating streak:', error);
       if (isMountedRef.current) { setCurrentStreak(0); setStreakMultiplier(1); }
     }
-  }, [user]);
+  }, [user, getServerToday]);
 
   const loadAllData = useCallback(async () => {
     if (isMountedRef.current) setLoading(true);
@@ -180,7 +194,7 @@ function StudentMissions({ user }) {
     } finally {
       if (isMountedRef.current) setLoading(false);
     }
-  }, [fetchTodayMissions, fetchCompletedMissions, fetchStudentData, fetchLeaderboard, calculateStreak, showToast]);
+  }, [fetchTodayMissions, fetchCompletedMissions, fetchStudentData, fetchLeaderboard, calculateStreak, showToast, getServerToday]);
 
   useEffect(() => {
     if (user?.student) loadAllData();
@@ -333,7 +347,7 @@ function StudentMissions({ user }) {
                   <div className="sm-streak-card__number">{currentStreak}</div>
                 </div>
                 <div className="sm-streak-card__details">
-                  <h3>سلسلة الاستمرارية</h3>
+                  <h3>سلسلة النجاح</h3>
                   <p>
                     {currentStreak === 0
                       ? 'ابدأ سلسلتك اليوم!'
@@ -353,7 +367,7 @@ function StudentMissions({ user }) {
 
               {leaderboard.length > 0 && (
                 <div className="sm-leaderboard">
-                  <h4>🏆 Today's leaders</h4>
+                  <h4>🏆 متصدرو اليوم</h4>
                   <div className="sm-leaderboard__list">
                     {leaderboard.map((student, idx) => (
                       <div key={idx} className="sm-leaderboard__item">
