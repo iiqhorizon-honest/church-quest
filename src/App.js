@@ -36,21 +36,15 @@ const CardAnimOverlay = React.memo(function CardAnimOverlay({ anim, onDone }) {
   return (
     <div className={`card-anim-overlay${anim.closing ? ' closing' : ''}`}>
       {anim.type === 'church' && (
-        <div className="anim-scene anim-church">
-          <div className="ch-building">
-            <div className="ch-roof"><span className="ch-cross">✝</span></div>
-            <div className="ch-facade">
-              <div className="ch-win ch-win-l" /><div className="ch-win ch-win-r" />
-              <div className="ch-door-frame">
-                <div className="ch-door ch-door-l" />
-                <div className="ch-door ch-door-r" />
-                <div className="ch-door-light" />
-              </div>
-            </div>
+        <div className="anim-scene anim-cross">
+          <div className="cross-glow-bg" />
+          <div className="cross-wrap">
+            <div className="cross-v" />
+            <div className="cross-h" />
+            <div className="cross-center" />
           </div>
-          <div className="ch-ground" />
-          {[...Array(10)].map((_,i) => <div key={i} className={`ch-spark sp${i}`} />)}
-          <div className="anim-label">Daily missions 📋</div>
+          {[...Array(12)].map((_,i) => <div key={i} className={`cross-ray cr${i}`} />)}
+          <div className="cross-label">المهمات 📋</div>
         </div>
       )}
       {anim.type === 'stars' && (
@@ -69,7 +63,7 @@ const CardAnimOverlay = React.memo(function CardAnimOverlay({ anim, onDone }) {
             {[...Array(10)].map((_,i) => <div key={i} className={`bcb${i}`}>🪙</div>)}
           </div>
           <div className="bonus-text">اجمع العملات! 🏃</div>
-          <div className="anim-label">Bonus ⭐</div>
+          <div className="anim-label">البونص ⭐</div>
         </div>
       )}
       {anim.type === 'cart' && (
@@ -97,8 +91,8 @@ const CardAnimOverlay = React.memo(function CardAnimOverlay({ anim, onDone }) {
             <div className="podium-1">🏆<span>1</span></div>
             <div className="podium-3">🥉<span>3</span></div>
           </div>
-          <div className="race-text">مين الأول النهارده؟ 🏆</div>
-          <div className="anim-label">Leader Board 🏆</div>
+          <div className="race-text">من الأول النهارده؟ 🏆</div>
+          <div className="anim-label">الصدارة 🏆</div>
         </div>
       )}
     </div>
