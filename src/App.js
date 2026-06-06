@@ -1,235 +1,195 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { supabase } from './supabaseClient';
-import './App.css';
-import './CardAnimations.css';
+import { supabase } from '../../supabaseClient';
+import './Login.css';
 
-// Auth Components
-import Login from './components/Auth/Login';
-
-// Student Components
-import StudentDashboard from './components/Student/Dashboard';
-import StudentMissions from './components/Student/Missions';
-import StudentBonusMissions from './components/Student/BonusMissions';
-import StudentShop from './components/Student/Shop';
-import StudentLeaderboard from './components/Student/Leaderboard';
-
-// Admin Components
-import AdminDashboard from './components/Admin/Dashboard';
-import ManageStudents from './components/Admin/ManageStudents';
-import QRScanner from './components/Admin/QRScanner';
-import ManageProducts from './components/Admin/ManageProducts';
-import PendingOrders from './components/Admin/PendingOrders';
-import AddCoins from './components/Admin/AddCoins';
-import CreateDailyMissions from './components/Admin/CreateDailyMissions';
-import CreateBonusMissions from './components/Admin/CreateBonusMissions';
-
-// ── Card Animation Context ──────────────────────────
-export const AnimContext = React.createContext(null);
-
-const CardAnimOverlay = React.memo(function CardAnimOverlay({ anim, onDone }) {
-  React.useEffect(() => {
-    if (!anim) return;
-    const t = setTimeout(onDone, 2200);
-    return () => clearTimeout(t);
-  }, [anim, onDone]);
-  if (!anim) return null;
+// ─── floating gold particles ────────────────────────────────────────────────
+function Particles() {
+  const particles = Array.from({ length: 14 });
   return (
-    <div className={`card-anim-overlay${anim.closing ? ' closing' : ''}`}>
-      {anim.type === 'church' && (
-        <div className="anim-scene anim-cross">
-          <div className="cross-glow-bg" />
-          <div className="cross-wrap">
-            <div className="cross-v" />
-            <div className="cross-h" />
-            <div className="cross-center" />
-          </div>
-          {[...Array(12)].map((_,i) => <div key={i} className={`cross-ray cr${i}`} />)}
-          <div className="cross-label">المهمات 📋</div>
-        </div>
-      )}
-      {anim.type === 'stars' && (
-        <div className="anim-scene anim-star">
-          <div className="star-glow-bg" />
-          <div className="star-main">⭐</div>
-          {[...Array(8)].map((_,i) => <div key={i} className={`star-orbit so${i}`}>✨</div>)}
-          {[...Array(10)].map((_,i) => <div key={i} className={`star-ray sr${i}`} />)}
-          <div className="star-label">البونص ⭐</div>
-        </div>
-      )}
-      {anim.type === 'cart' && (
-        <div className="anim-scene anim-coins">
-          <div className="coins-glow-bg" />
-          {[...Array(12)].map((_,i) => <div key={i} className={`falling-coin fc${i}`}>🪙</div>)}
-          <div className="coins-pile">
-            <div className="pile-coin pc1">🪙</div>
-            <div className="pile-coin pc2">🪙</div>
-            <div className="pile-coin pc3">🪙</div>
-            <div className="pile-coin pc4">🪙</div>
-            <div className="pile-coin pc5">🪙</div>
-          </div>
-          <div className="coins-label">المتجر 🛒</div>
-        </div>
-      )}
-      {anim.type === 'trophy' && (
-        <div className="anim-scene anim-trophy-light">
-          <div className="trophy-glow-bg" />
-          <div className="trophy-main">🏆</div>
-          {[...Array(12)].map((_,i) => <div key={i} className={`trophy-ray-l trl${i}`} />)}
-          <div className="trophy-medals">
-            <div className="tm tm1">🥇</div>
-            <div className="tm tm2">🥈</div>
-            <div className="tm tm3">🥉</div>
-          </div>
-          <div className="trophy-label">الصدارة 🏆</div>
-        </div>
-      )}
-    </div>
-  );
-});
-
-function App() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [cardAnim, setCardAnim] = useState(null);
-
-  useEffect(() => {
-    const userData = localStorage.getItem('churchQuestUser');
-    if (!userData) { setLoading(false); return; }
-
-    // تأكد إن الـ Supabase session الحالية تطابق المستخدم المحفوظ
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      const saved = JSON.parse(userData);
-      if (!session || session.user.email !== saved.email) {
-        // session منتهية أو مش نفس المستخدم — امسح القديمة
-        localStorage.removeItem('churchQuestUser');
-        supabase.auth.signOut();
-      } else {
-        setUser(saved);
-      }
-      setLoading(false);
-    });
-  }, []);
-
-  const handleLogin = (userData) => {
-    // امسح أي بيانات قديمة قبل ما تحفظ الجديدة
-    localStorage.clear();
-    sessionStorage.clear();
-    setUser(userData);
-    localStorage.setItem('churchQuestUser', JSON.stringify(userData));
-  };
-
-  const handleLogout = async () => {
-    setUser(null);
-    // امسح كل حاجة في localStorage — حتى session Supabase
-    localStorage.clear();
-    sessionStorage.clear();
-    await supabase.auth.signOut({ scope: 'global' });
-  };
-
-  const handleCardNav = React.useCallback((animType, path, navigateFn) => {
-    setCardAnim({ type: animType, closing: false });
-    // navigate after short delay so overlay is visible
-    setTimeout(() => navigateFn(path), 80);
-    // start fade-out
-    setTimeout(() => setCardAnim(prev => prev ? { ...prev, closing: true } : null), 1800);
-    // remove overlay
-    setTimeout(() => setCardAnim(null), 2200);
-  }, []);
-
-  const clearCardAnim = React.useCallback(() => setCardAnim(null), []);
-
-  if (loading) {
-    return (
-      <div className="loading-screen">
-        <div className="loading-spinner"></div>
-        <p>جاري التحميل...</p>
-      </div>
-    );
-  }
-
-  return (
-    <AnimContext.Provider value={handleCardNav}>
-    <Router>
-      <div className="App">
-        <CardAnimOverlay anim={cardAnim} onDone={clearCardAnim} />
-        <Routes>
-          {/* Login Route */}
-          <Route 
-            path="/login" 
-            element={!user ? <Login onLogin={handleLogin} /> : <Navigate to={user.role === 'admin' ? '/admin' : '/student'} />} 
-          />
-
-          {/* Student Routes */}
-          <Route 
-            path="/student" 
-            element={user?.role === 'student' ? <StudentDashboard user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/student/missions" 
-            element={user?.role === 'student' ? <StudentMissions user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/student/bonus" 
-            element={user?.role === 'student' ? <StudentBonusMissions user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/student/shop" 
-            element={user?.role === 'student' ? <StudentShop user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/student/leaderboard" 
-            element={user?.role === 'student' ? <StudentLeaderboard user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-
-          {/* Admin Routes */}
-          <Route 
-            path="/admin" 
-            element={user?.role === 'admin' ? <AdminDashboard user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/admin/students" 
-            element={user?.role === 'admin' ? <ManageStudents user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/admin/qr-scanner" 
-            element={user?.role === 'admin' ? (
-              <QRScanner 
-                user={user} 
-                onLogout={handleLogout} 
-              />
-            ) : (
-              <Navigate to="/login" />
-            )} 
-          />
-          <Route 
-            path="/admin/products" 
-            element={user?.role === 'admin' ? <ManageProducts user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/admin/orders" 
-            element={user?.role === 'admin' ? <PendingOrders user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/admin/add-coins" 
-            element={user?.role === 'admin' ? <AddCoins user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/admin/daily-missions" 
-            element={user?.role === 'admin' ? <CreateDailyMissions user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/admin/bonus-missions" 
-            element={user?.role === 'admin' ? <CreateBonusMissions user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-
-          {/* Default Route */}
-          <Route path="/" element={<Navigate to="/login" />} />
-        </Routes>
-      </div>
-    </Router>
-    </AnimContext.Provider>
+    <>
+      {particles.map((_, i) => (
+        <div
+          key={i}
+          className="particle"
+          style={{
+            left:              `${8 + (i * 7) % 86}%`,
+            width:             `${2 + (i % 3)}px`,
+            height:            `${2 + (i % 3)}px`,
+            animationDuration: `${8 + (i * 1.3) % 12}s`,
+            animationDelay:    `${(i * 0.7) % 8}s`,
+            background:        i % 4 === 0
+                                 ? 'rgba(77,159,255,0.7)'
+                                 : i % 3 === 0
+                                   ? 'rgba(245,200,66,0.9)'
+                                   : 'rgba(255,224,130,0.6)',
+          }}
+        />
+      ))}
+    </>
   );
 }
 
-export default App;
+// ─── main component ───────────────────────────────────────────────────────────
+function Login({ onLogin }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading,  setLoading]  = useState(false);
+  const [error,    setError]    = useState('');
+  const [showPass, setShowPass] = useState(false);
+
+  useEffect(() => { if (error) setError(''); }, [username, password]);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      // الخطوة 0: امسح أي session قديمة قبل تسجيل الدخول
+      await supabase.auth.signOut();
+
+      // الخطوة 1: Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: username.trim(),
+        password: password,
+      });
+
+      if (authError) {
+        setError('البريد الإلكتروني أو كلمة المرور غير صحيحة');
+        setLoading(false);
+        return;
+      }
+
+      console.log('Auth user email:', authData.user.email);
+
+      // الخطوة 2: جيب بيانات الـ role والـ student
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('*, students(*)')
+        .eq('email', authData.user.email)
+        .maybeSingle();
+
+      console.log('userData:', userData);
+      console.log('userError:', userError);
+
+      if (userError || !userData) {
+        // ✅ signOut الأول، بعدين setError وsetLoading
+        await supabase.auth.signOut();
+        setError('حدث خطأ في تحميل بيانات المستخدم');
+        setLoading(false);
+        return;
+      }
+
+      const loginData = {
+        id:      userData.id,
+        email:   userData.email,
+        role:    userData.role,
+        student: userData.students,
+      };
+
+      console.log('✅ Login successful:', loginData.email);
+      onLogin(loginData);
+
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('حدث خطأ غير متوقع. حاول مرة أخرى.');
+      setLoading(false);
+    }
+  };
+
+  const quickLogin = (role) => {
+    if (role === 'admin') {
+      setUsername('admin@church.com');
+      setPassword('224410');
+    } else {
+      setUsername('JohnHani@gmail.com');
+      setPassword('Am1234555');
+    }
+  };
+
+  return (
+    <div className="login-page">
+      <div className="stars" />
+      <Particles />
+
+      <div className="login-container">
+        <div className="logo-container">
+          <span className="logo-icon">✝️</span>
+          <h1 className="game-title">CHURCH QUEST</h1>
+          <p className="game-subtitle">رحلتك الروحية تبدأ هنا</p>
+        </div>
+
+        <form className="login-form" onSubmit={handleLogin} noValidate>
+          {error && (
+            <div className="error-message" role="alert">
+              ⚠️ {error}
+            </div>
+          )}
+
+          <div className="form-group">
+            <label htmlFor="lp-email">👤 البريد الإلكتروني</label>
+            <input
+              id="lp-email"
+              type="email"
+              className="form-input"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              placeholder="example@church.com"
+              autoComplete="email"
+              required
+              disabled={loading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="lp-pass">🔒 كلمة المرور</label>
+            <div className="pass-wrapper">
+              <input
+                id="lp-pass"
+                type={showPass ? 'text' : 'password'}
+                className="form-input"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="••••••••"
+                autoComplete="current-password"
+                required
+                disabled={loading}
+              />
+              <button
+                type="button"
+                className="pass-toggle"
+                onClick={() => setShowPass(v => !v)}
+                tabIndex={-1}
+                aria-label={showPass ? 'إخفاء' : 'إظهار'}
+              >
+                {showPass ? '🙈' : '👁️'}
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={loading || !username || !password}
+          >
+            {loading ? '⏳ جاري التحقق...' : '🚀 دخول'}
+          </button>
+
+          <div className="demo-accounts">
+            <p>💡 حسابات تجريبية:</p>
+            <div className="demo-btns">
+              <button type="button" className="demo-btn" onClick={() => quickLogin('student')} disabled={loading}>
+                🎓 طالب
+              </button>
+              <button type="button" className="demo-btn" onClick={() => quickLogin('admin')} disabled={loading}>
+                ⚙️ مسئول
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default Login;
