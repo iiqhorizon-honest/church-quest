@@ -112,14 +112,19 @@ function App() {
   }, []);
 
   const handleLogin = (userData) => {
+    // امسح أي بيانات قديمة قبل ما تحفظ الجديدة
+    localStorage.clear();
+    sessionStorage.clear();
     setUser(userData);
     localStorage.setItem('churchQuestUser', JSON.stringify(userData));
   };
 
   const handleLogout = async () => {
     setUser(null);
-    localStorage.removeItem('churchQuestUser');
-    await supabase.auth.signOut();
+    // امسح كل حاجة في localStorage — حتى session Supabase
+    localStorage.clear();
+    sessionStorage.clear();
+    await supabase.auth.signOut({ scope: 'global' });
   };
 
   const handleCardNav = React.useCallback((animType, path, navigateFn) => {
