@@ -133,9 +133,9 @@ function App() {
   };
 
   const handleLogout = async () => {
-    setUser(null);
     localStorage.removeItem('churchQuestUser');
     await supabase.auth.signOut();
+    window.location.href = '/login';
   };
 
   const handleCardNav = React.useCallback((animType, path, navigateFn) => {
