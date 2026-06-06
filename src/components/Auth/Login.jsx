@@ -2,33 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supabaseClient';
 import './Login.css';
 
-// ─── floating gold particles ────────────────────────────────────────────────
-function Particles() {
-  const particles = Array.from({ length: 14 });
-  return (
-    <>
-      {particles.map((_, i) => (
-        <div
-          key={i}
-          className="particle"
-          style={{
-            left:              `${8 + (i * 7) % 86}%`,
-            width:             `${2 + (i % 3)}px`,
-            height:            `${2 + (i % 3)}px`,
-            animationDuration: `${8 + (i * 1.3) % 12}s`,
-            animationDelay:    `${(i * 0.7) % 8}s`,
-            background:        i % 4 === 0
-                                 ? 'rgba(77,159,255,0.7)'
-                                 : i % 3 === 0
-                                   ? 'rgba(245,200,66,0.9)'
-                                   : 'rgba(255,224,130,0.6)',
-          }}
-        />
-      ))}
-    </>
-  );
-}
-
 // ─── main component ───────────────────────────────────────────────────────────
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -110,7 +83,6 @@ function Login({ onLogin }) {
   return (
     <div className="login-page">
       <div className="stars" />
-      <Particles />
 
       <div className="login-container">
         <div className="logo-container">

@@ -1,41 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Cairo:wght@400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
 
-/* ══════════════════════════════════════════
-   LOGIN PAGE — SACRED ARCADE THEME
-   Fully scoped to .login-page
-   Zero global leaks.
-══════════════════════════════════════════ */
-
-.login-page *,
-.login-page *::before,
-.login-page *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+.login-page *, .login-page *::before, .login-page *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
 }
 
 .login-page {
-  --c-bg:       #03000a;
-  --c-deep:     #070014;
-  --c-gold:     #f5c842;
-  --c-gold2:    #ffedd5;
-  --c-blue:     #1a6aff;
-  --c-blue2:    #4d9fff;
-  --c-cross:    #ffe082;
-  --c-card:     rgba(10, 2, 28, 0.92);
-  --c-border:   rgba(245, 200, 66, 0.3);
-  --c-text:     #f5ecd7;
-  --c-muted:    #8a7e6a;
-  --c-error:    #ff6b6b;
-  --glow-gold:  0 0 24px rgba(245,200,66,0.65), 0 0 60px rgba(245,200,66,0.25);
-  --glow-blue:  0 0 20px rgba(26,106,255,0.6),  0 0 50px rgba(26,106,255,0.2);
-  --glow-cross: 0 0 30px rgba(255,224,130,0.8), 0 0 80px rgba(255,200,60,0.4);
-  --font-h:     'Cinzel', 'Cairo', serif;
-  --font-b:     'Cairo', sans-serif;
-
   min-height: 100vh;
-  background: var(--c-bg);
-  font-family: var(--font-b);
+  background: #05000f;
+  font-family: 'Cairo', sans-serif;
   direction: rtl;
   display: flex;
   align-items: center;
@@ -45,430 +17,183 @@
   padding: 1rem;
 }
 
-/* ══ deep space gradient ══ */
+/* ── خلفية بسيطة بدون أنيميشن ── */
 .login-page::before {
   content: '';
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   background:
-    radial-gradient(ellipse 70% 50% at 50% 0%,   rgba(245,200,66,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 20% 80%,  rgba(26,106,255,0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 80% 30%,  rgba(180,79,255,0.06) 0%, transparent 60%),
-    linear-gradient(180deg, #03000a 0%, #070014 50%, #02000d 100%);
-  pointer-events: none;
-  z-index: 0;
+    radial-gradient(ellipse 80% 60% at 50% 0%,   rgba(120,60,220,0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 10% 100%,  rgba(245,200,66,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 100%,  rgba(245,200,66,0.06) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
 }
 
-/* ══ animated grid ══ */
-.login-page::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(245,200,66,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(245,200,66,0.04) 1px, transparent 1px);
-  background-size: 50px 50px;
-  animation: lp-grid 25s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-@keyframes lp-grid { to { background-position: 50px 50px; } }
-
-/* ══ STARS ══ */
+/* ── نقاط ضوء ثابتة بدل particles متحركة ── */
 .login-page .stars {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
 }
-.login-page .stars::before,
-.login-page .stars::after {
+.login-page .stars::before {
   content: '';
-  position: absolute;
-  width: 2px; height: 2px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow:
-    /* white stars */
-    40px  80px #fff,  180px 30px rgba(255,255,255,.7),
-    300px 160px #fff, 460px 70px rgba(255,255,255,.8),
-    600px 200px #fff, 750px 50px rgba(255,255,255,.6),
-    900px 150px #fff, 120px 280px rgba(255,255,255,.5),
-    /* gold star-dots */
-    240px 340px rgba(245,200,66,.8),
-    520px 390px rgba(245,200,66,.6),
-    800px 310px rgba(245,200,66,.7),
-    /* blue star-dots */
-    380px 450px rgba(77,159,255,.7),
-    680px 430px rgba(77,159,255,.5),
-    1000px 80px rgba(77,159,255,.8),
-    /* deep small */
-    60px 520px rgba(255,255,255,.4),
-    420px 510px rgba(255,255,255,.5),
-    760px 490px rgba(255,255,255,.3);
-  animation: lp-twinkle 4s ease-in-out infinite;
-}
-.login-page .stars::after {
-  box-shadow:
-    110px 140px rgba(255,255,255,.6),
-    290px  90px #fff,
-    470px 220px rgba(245,200,66,.7),
-    650px 130px rgba(255,255,255,.5),
-    830px 240px rgba(77,159,255,.6),
-    150px 400px rgba(255,255,255,.4),
-    550px 460px rgba(245,200,66,.5),
-    950px 360px rgba(255,255,255,.6);
-  animation-duration: 6s;
-  animation-delay: 2.5s;
-}
-@keyframes lp-twinkle { 0%,100%{opacity:.15} 50%{opacity:.9} }
-
-/* ══ floating particles ══ */
-.login-page .particle {
-  position: fixed;
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--c-gold);
-  pointer-events: none;
-  z-index: 0;
-  animation: lp-particle-drift linear infinite;
-  opacity: 0;
-}
-@keyframes lp-particle-drift {
-  0%   { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
-  10%  { opacity: .6; }
-  90%  { opacity: .4; }
-  100% { transform: translateY(-10px) rotate(360deg); opacity: 0; }
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10%  15%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25%  40%, rgba(245,200,66,0.5)  0%, transparent 100%),
+    radial-gradient(1px 1px at 40%  10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60%  30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75%  60%, rgba(245,200,66,0.4)  0%, transparent 100%),
+    radial-gradient(1px 1px at 85%  20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 92%  75%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(2px 2px at 50%  80%, rgba(245,200,66,0.3)  0%, transparent 100%),
+    radial-gradient(1px 1px at 15%  70%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70%  90%, rgba(255,255,255,0.3) 0%, transparent 100%);
 }
 
-/* ══════════════════════════════════════════
-   LOGIN CONTAINER CARD
-══════════════════════════════════════════ */
+/* ── CARD ── */
 .login-page .login-container {
-  background: var(--c-card);
-  border: 1.5px solid var(--c-border);
-  border-radius: 28px;
+  background: rgba(10, 2, 28, 0.95);
+  border: 1px solid rgba(245,200,66,0.2);
+  border-radius: 24px;
   padding: 2.5rem 2rem;
-  width: 100%;
-  max-width: 420px;
-  position: relative;
-  z-index: 1;
-  backdrop-filter: blur(20px);
-  box-shadow:
-    0 0 0 1px rgba(245,200,66,0.08),
-    0 20px 60px rgba(0,0,0,0.8),
-    0 0 80px rgba(245,200,66,0.06);
-  animation: lp-cardin .6s cubic-bezier(.34,1.56,.64,1) both;
+  width: 100%; max-width: 400px;
+  position: relative; z-index: 1;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 0 1px rgba(120,60,220,0.1), 0 24px 60px rgba(0,0,0,0.7);
+  animation: card-in 0.5s cubic-bezier(0.34,1.4,0.64,1) both;
 }
-@keyframes lp-cardin {
-  from { opacity: 0; transform: translateY(40px) scale(.96); }
-  to   { opacity: 1; transform: translateY(0)    scale(1);   }
+@keyframes card-in {
+  from { opacity:0; transform: translateY(24px) scale(0.97); }
+  to   { opacity:1; transform: translateY(0)    scale(1); }
 }
 
-/* top golden border glow line */
+/* خط ذهبي علوي ثابت */
 .login-page .login-container::before {
   content: '';
-  position: absolute;
-  top: -1px; left: 10%; right: 10%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--c-gold), var(--c-gold2), var(--c-gold), transparent);
+  position: absolute; top: -1px; left: 15%; right: 15%; height: 2px;
+  background: linear-gradient(90deg, transparent, #f5c842, transparent);
   border-radius: 2px;
-  box-shadow: 0 0 20px rgba(245,200,66,0.8);
-  animation: lp-topline 3s ease-in-out infinite;
-}
-@keyframes lp-topline {
-  0%,100% { opacity: .7; left: 15%; right: 15%; }
-  50%      { opacity: 1;  left: 5%;  right: 5%;  }
 }
 
-/* decorative corner ornaments */
-.login-page .login-container::after {
-  content: '✦';
-  position: absolute;
-  bottom: 1rem; left: 50%;
-  transform: translateX(-50%);
-  font-size: .75rem;
-  color: rgba(245,200,66,0.35);
-  letter-spacing: 8px;
-}
-
-/* ══════════════════════════════════════════
-   LOGO / HERO SECTION
-══════════════════════════════════════════ */
+/* ── LOGO ── */
 .login-page .logo-container {
-  text-align: center;
-  margin-bottom: 2rem;
+  text-align: center; margin-bottom: 2rem;
 }
-
-/* cross icon with sacred glow */
 .login-page .logo-icon {
-  font-size: 3.5rem;
-  display: block;
-  margin-bottom: .6rem;
-  filter: drop-shadow(0 0 16px rgba(255,224,130,0.9));
-  animation: lp-float 3s ease-in-out infinite;
-  position: relative;
+  font-size: 3.2rem; display: block; margin-bottom: 0.6rem;
+  filter: drop-shadow(0 0 14px rgba(255,224,130,0.8));
+  animation: icon-float 3.5s ease-in-out infinite;
 }
-/* pulsing halo behind the cross */
-.login-page .logo-icon::after {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 70px; height: 70px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(245,200,66,0.2) 0%, transparent 70%);
-  animation: lp-halo 2s ease-in-out infinite;
+@keyframes icon-float {
+  0%,100% { transform: translateY(0);    }
+  50%      { transform: translateY(-7px); }
 }
-@keyframes lp-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-@keyframes lp-halo  { 0%,100%{transform:translate(-50%,-50%) scale(1); opacity:.5} 50%{transform:translate(-50%,-50%) scale(1.5); opacity:1} }
-
 .login-page .game-title {
-  font-family: var(--font-h);
-  font-size: 2rem;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: transparent;
-  background: linear-gradient(180deg, #fffde7 0%, var(--c-gold) 40%, #c8860a 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
+  font-size: 1.85rem; font-weight: 900; letter-spacing: 3px;
+  background: linear-gradient(180deg, #fff8dc 0%, #f5c842 50%, #c8860a 100%);
+  -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: none;
-  filter: drop-shadow(0 0 12px rgba(245,200,66,0.5));
-  margin-bottom: .4rem;
-  animation: lp-titleshine 4s ease-in-out infinite;
-  position: relative;
+  filter: drop-shadow(0 0 10px rgba(245,200,66,0.4));
+  margin-bottom: 0.3rem;
 }
-@keyframes lp-titleshine {
-  0%,100% { filter: drop-shadow(0 0 12px rgba(245,200,66,0.4)); }
-  50%      { filter: drop-shadow(0 0 22px rgba(245,200,66,0.9)); }
-}
-
-/* pixel-style divider under title */
-.login-page .game-title::after {
-  content: '';
-  display: block;
-  width: 60px; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--c-gold), transparent);
-  margin: .5rem auto 0;
-  border-radius: 1px;
-}
-
 .login-page .game-subtitle {
-  font-family: var(--font-b);
-  font-size: .88rem;
-  color: var(--c-muted);
-  letter-spacing: 1px;
-  font-weight: 600;
+  font-size: 0.85rem; color: #7a6e5a; font-weight: 600; letter-spacing: 1px;
 }
 
-/* ══════════════════════════════════════════
-   FORM
-══════════════════════════════════════════ */
+/* ── FORM ── */
 .login-page .login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
+  display: flex; flex-direction: column; gap: 1rem;
 }
-
-/* error */
 .login-page .error-message {
-  background: rgba(255,107,107,0.12);
-  border: 1.5px solid rgba(255,107,107,0.4);
-  border-radius: 10px;
-  padding: .65rem 1rem;
-  color: var(--c-error);
-  font-size: .85rem;
-  font-weight: 700;
-  text-align: center;
-  animation: lp-shake .4s ease;
+  background: rgba(255,107,107,0.1);
+  border: 1px solid rgba(255,107,107,0.35);
+  border-radius: 10px; padding: 0.6rem 1rem;
+  color: #ff6b6b; font-size: 0.85rem; font-weight: 700; text-align: center;
+  animation: shake 0.4s ease;
 }
-@keyframes lp-shake {
-  0%,100%{transform:translateX(0)}
-  20%{transform:translateX(-6px)}
-  40%{transform:translateX(6px)}
-  60%{transform:translateX(-4px)}
-  80%{transform:translateX(4px)}
+@keyframes shake {
+  0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)}
+  40%{transform:translateX(5px)}   60%{transform:translateX(-3px)}
+  80%{transform:translateX(3px)}
 }
-
-/* form group */
-.login-page .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: .45rem;
-}
+.login-page .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
 .login-page .form-group label {
-  font-size: .82rem;
-  font-weight: 700;
-  color: rgba(245,200,66,0.75);
-  letter-spacing: .5px;
+  font-size: 0.82rem; font-weight: 700; color: rgba(245,200,66,0.7); letter-spacing: 0.5px;
 }
-
-/* input */
 .login-page .form-input {
   background: rgba(255,255,255,0.04);
-  border: 1.5px solid rgba(245,200,66,0.2);
-  border-radius: 12px;
-  padding: .75rem 1rem;
-  color: var(--c-text);
-  font-size: .95rem;
-  font-family: var(--font-b);
-  outline: none;
-  transition: border-color .25s, box-shadow .25s, background .25s;
-  width: 100%;
-  direction: ltr; /* emails are LTR */
-  text-align: right;
+  border: 1px solid rgba(245,200,66,0.18);
+  border-radius: 12px; padding: 0.75rem 1rem;
+  color: #f5ecd7; font-size: 0.95rem; font-family: 'Cairo', sans-serif;
+  outline: none; width: 100%; direction: ltr; text-align: right;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
-.login-page .form-input::placeholder {
-  color: var(--c-muted);
-  font-size: .85rem;
-  direction: rtl;
-}
+.login-page .form-input::placeholder { color: #6a5e4a; font-size: 0.85rem; direction: rtl; }
 .login-page .form-input:focus {
-  border-color: var(--c-gold);
-  background: rgba(245,200,66,0.06);
-  box-shadow: 0 0 0 3px rgba(245,200,66,0.12), var(--glow-gold);
+  border-color: #f5c842;
+  background: rgba(245,200,66,0.05);
+  box-shadow: 0 0 0 3px rgba(245,200,66,0.1);
 }
 .login-page .form-input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 100px #07001a inset;
-  -webkit-text-fill-color: var(--c-text);
-  caret-color: var(--c-gold);
+  -webkit-text-fill-color: #f5ecd7;
 }
-
-/* password wrapper */
-.login-page .pass-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-.login-page .pass-wrapper .form-input {
-  padding-left: 3rem; /* space for toggle btn (LTR field) */
-}
+.login-page .pass-wrapper { position: relative; display: flex; align-items: center; }
+.login-page .pass-wrapper .form-input { padding-left: 3rem; }
 .login-page .pass-toggle {
-  position: absolute;
-  left: .7rem;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 1.1rem;
-  opacity: .65;
-  transition: opacity .2s, transform .2s;
-  padding: 0;
-  line-height: 1;
-  user-select: none;
+  position: absolute; left: 0.7rem;
+  background: transparent; border: none; cursor: pointer;
+  font-size: 1.1rem; opacity: 0.6; transition: opacity 0.2s;
+  padding: 0; line-height: 1;
 }
-.login-page .pass-toggle:hover { opacity: 1; transform: scale(1.15); }
+.login-page .pass-toggle:hover { opacity: 1; }
 
-/* ══ SUBMIT BUTTON ══ */
+/* ── BUTTON ── */
 .login-page .btn-primary {
   width: 100%;
-  background: linear-gradient(135deg, #c8860a, var(--c-gold), #ffe082, var(--c-gold), #c8860a);
-  background-size: 300% auto;
-  color: #1a0e00;
-  border: none;
-  padding: .9rem;
-  border-radius: 14px;
-  font-size: 1.05rem;
-  font-weight: 900;
-  font-family: var(--font-h);
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all .25s;
-  box-shadow: var(--glow-gold), 0 4px 20px rgba(0,0,0,0.4);
-  position: relative;
-  overflow: hidden;
-  animation: lp-btnshine 3s linear infinite;
-  margin-top: .3rem;
-}
-@keyframes lp-btnshine {
-  0%   { background-position: 0%   center; }
-  100% { background-position: 300% center; }
-}
-/* shimmer sweep */
-.login-page .btn-primary::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 60%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  transform: skewX(-20deg);
-  animation: lp-shimmer 2.5s ease-in-out infinite;
-}
-@keyframes lp-shimmer {
-  0%   { left: -60%; }
-  100% { left: 140%; }
+  background: linear-gradient(135deg, #b87a0a, #f5c842, #ffe082, #f5c842, #b87a0a);
+  background-size: 200% auto;
+  color: #1a0e00; border: none;
+  padding: 0.9rem; border-radius: 14px;
+  font-size: 1rem; font-weight: 900; font-family: 'Cairo', sans-serif;
+  letter-spacing: 1px; cursor: pointer; margin-top: 0.3rem;
+  box-shadow: 0 4px 20px rgba(245,200,66,0.3);
+  transition: background-position 0.4s, transform 0.15s, box-shadow 0.15s;
 }
 .login-page .btn-primary:hover:not(:disabled) {
+  background-position: right center;
   transform: translateY(-2px);
-  box-shadow: 0 0 35px rgba(245,200,66,0.9), 0 0 70px rgba(245,200,66,0.4);
+  box-shadow: 0 6px 28px rgba(245,200,66,0.5);
 }
-.login-page .btn-primary:active:not(:disabled) { transform: scale(.97); }
+.login-page .btn-primary:active:not(:disabled) { transform: scale(0.97); }
 .login-page .btn-primary:disabled {
-  opacity: .6;
-  cursor: not-allowed;
-  animation: none;
-  background: linear-gradient(135deg, #8a6a10, #c8a020);
+  opacity: 0.55; cursor: not-allowed;
+  background: linear-gradient(135deg, #7a5a10, #a07020);
 }
 
-/* ══ DEMO ACCOUNTS ══ */
+/* ── DEMO ── */
 .login-page .demo-accounts {
-  text-align: center;
-  padding-top: .8rem;
+  text-align: center; padding-top: 0.8rem;
   border-top: 1px solid rgba(245,200,66,0.1);
 }
 .login-page .demo-accounts p {
-  font-size: .78rem;
-  color: var(--c-muted);
-  margin-bottom: .6rem;
-  letter-spacing: .5px;
+  font-size: 0.78rem; color: #6a5e4a; margin-bottom: 0.5rem;
 }
-.login-page .demo-btns {
-  display: flex;
-  gap: .6rem;
-  justify-content: center;
-}
+.login-page .demo-btns { display: flex; gap: 0.6rem; justify-content: center; }
 .login-page .demo-btn {
-  background: rgba(245,200,66,0.08);
-  border: 1.5px solid rgba(245,200,66,0.25);
-  color: rgba(245,200,66,0.8);
-  padding: .45rem 1.2rem;
-  border-radius: 30px;
-  font-size: .82rem;
-  font-weight: 700;
-  font-family: var(--font-b);
-  cursor: pointer;
-  transition: all .2s;
-  letter-spacing: .5px;
+  background: rgba(245,200,66,0.07);
+  border: 1px solid rgba(245,200,66,0.2);
+  color: rgba(245,200,66,0.75); padding: 0.45rem 1.2rem;
+  border-radius: 30px; font-size: 0.82rem; font-weight: 700;
+  font-family: 'Cairo', sans-serif; cursor: pointer;
+  transition: all 0.2s;
 }
 .login-page .demo-btn:hover {
-  background: rgba(245,200,66,0.15);
-  border-color: var(--c-gold);
-  color: var(--c-gold);
-  box-shadow: 0 0 14px rgba(245,200,66,0.3);
-  transform: translateY(-1px);
+  background: rgba(245,200,66,0.14); border-color: #f5c842;
+  color: #f5c842; box-shadow: 0 0 12px rgba(245,200,66,0.25);
 }
-.login-page .demo-btn:active { transform: scale(.95); }
 
-/* ══════════════════════════════════════════
-   MOBILE TWEAKS
-══════════════════════════════════════════ */
+/* ── MOBILE ── */
 @media (max-width: 420px) {
-  .login-page .login-container {
-    padding: 2rem 1.4rem;
-    border-radius: 22px;
-    margin: .5rem;
-  }
-  .login-page .game-title { font-size: 1.65rem; letter-spacing: 2px; }
-  .login-page .logo-icon  { font-size: 3rem; }
-  .login-page .btn-primary { font-size: 1rem; }
-}
-
-/* ══════════════════════════════════════════
-   EXTRA PARTICLE PSEUDO ELEMENTS
-   (cheap CSS-only floating gold dots)
-══════════════════════════════════════════ */
-.login-page .login-container:hover::before {
-  opacity: 1;
-  left: 5%;
-  right: 5%;
+  .login-page .login-container { padding: 2rem 1.4rem; border-radius: 20px; }
+  .login-page .game-title { font-size: 1.6rem; letter-spacing: 2px; }
+  .login-page .logo-icon  { font-size: 2.8rem; }
 }
