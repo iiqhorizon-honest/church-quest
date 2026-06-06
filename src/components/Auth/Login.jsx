@@ -45,6 +45,9 @@ function Login({ onLogin }) {
     setLoading(true);
 
     try {
+      // الخطوة 0: امسح أي session قديمة قبل تسجيل الدخول
+      await supabase.auth.signOut();
+
       // الخطوة 1: Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: username.trim(),
@@ -99,7 +102,7 @@ function Login({ onLogin }) {
       setUsername('admin@church.com');
       setPassword('224410');
     } else {
-      setUsername('PeterMaged@gmail.com');
+      setUsername('JohnHani@gmail.com');
       setPassword('Am1234555');
     }
   };
