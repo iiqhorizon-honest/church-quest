@@ -86,32 +86,58 @@ body {
    الصفحات اللي محتاجة background تحطه في الـ CSS بتاعها
    =================================== */
 .loading-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  gap: 20px;
-  background: transparent;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 100vh; gap: 1.2rem;
+  background: #05000f;
+  position: fixed; inset: 0; z-index: 9000;
 }
 
-/* للصفحات اللي محتاجة الـ gradient الموف زي login screen */
-.loading-screen.gradient {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-}
-
+/* ── صليب loading ── */
 .loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 5px solid var(--overlay-light);
-  border-top-color: var(--text-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+  position: relative;
+  width: 70px; height: 70px;
+  display: flex; align-items: center; justify-content: center;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+/* الشعاع الرأسي */
+.loading-spinner::before {
+  content: '';
+  position: absolute;
+  width: 14px; height: 70px;
+  background: linear-gradient(180deg, transparent 0%, #c4b5fd 20%, #fff 50%, #fbbf24 80%, transparent 100%);
+  border-radius: 8px;
+  box-shadow: 0 0 16px #a371f7, 0 0 32px rgba(163,113,247,0.5);
+  animation: cross-load-pulse 1.2s ease-in-out infinite alternate;
 }
+
+/* الشعاع الأفقي */
+.loading-spinner::after {
+  content: '';
+  position: absolute;
+  width: 70px; height: 14px;
+  background: linear-gradient(90deg, transparent 0%, #c4b5fd 20%, #fff 50%, #fbbf24 80%, transparent 100%);
+  border-radius: 8px;
+  top: 28px;
+  box-shadow: 0 0 16px #a371f7, 0 0 32px rgba(163,113,247,0.5);
+  animation: cross-load-pulse 1.2s ease-in-out 0.3s infinite alternate;
+}
+
+@keyframes cross-load-pulse {
+  from { opacity: 0.5; box-shadow: 0 0 10px #a371f7; }
+  to   { opacity: 1;   box-shadow: 0 0 28px #c4b5fd, 0 0 56px rgba(163,113,247,0.6), 0 0 80px rgba(251,191,36,0.2); }
+}
+
+/* نص التحميل */
+.loading-screen p {
+  color: rgba(196,181,253,0.7);
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem; font-weight: 600;
+  letter-spacing: 1px;
+  animation: cross-load-pulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ===================================
    النجوم المتحركة
@@ -126,8 +152,8 @@ body {
   z-index: 0;
 }
 
-.stars::before,
-.stars::after {
+.login-page .stars::before,
+.login-page .stars::after {
   content: '';
   position: absolute;
   width: 2px;

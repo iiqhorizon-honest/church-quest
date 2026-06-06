@@ -49,39 +49,43 @@ const CardAnimOverlay = React.memo(function CardAnimOverlay({ anim, onDone }) {
         </div>
       )}
       {anim.type === 'stars' && (
-        <div className="anim-scene anim-star">
-          <div className="star-glow-bg" />
-          <div className="star-main">⭐</div>
-          {[...Array(8)].map((_,i) => <div key={i} className={`star-orbit so${i}`}>✨</div>)}
-          {[...Array(10)].map((_,i) => <div key={i} className={`star-ray sr${i}`} />)}
-          <div className="star-label">البونص ⭐</div>
+        <div className="anim-scene anim-wand">
+          <div className="wand-bg" />
+          <div className="wand-wrap">
+            <div className="wand-stick" />
+            <div className="wand-tip">⭐</div>
+          </div>
+          {[...Array(12)].map((_,i) => <div key={i} className={`wand-coin wc${i}`}>🪙</div>)}
+          {[...Array(10)].map((_,i) => <div key={i} className={`wand-spark wsp${i}`} />)}
+          <div className="wand-burst">✨</div>
+          <div className="wand-text">تحويل سحري! 🪄</div>
+          <div className="anim-label">البونص ⭐</div>
         </div>
       )}
       {anim.type === 'cart' && (
-        <div className="anim-scene anim-coins">
-          <div className="coins-glow-bg" />
-          {[...Array(12)].map((_,i) => <div key={i} className={`falling-coin fc${i}`}>🪙</div>)}
-          <div className="coins-pile">
-            <div className="pile-coin pc1">🪙</div>
-            <div className="pile-coin pc2">🪙</div>
-            <div className="pile-coin pc3">🪙</div>
-            <div className="pile-coin pc4">🪙</div>
-            <div className="pile-coin pc5">🪙</div>
+        <div className="anim-scene anim-gift">
+          <div className="gift-bg" />
+          <div className="gift-box">
+            <div className="gift-lid">🎀</div>
+            <div className="gift-body">🎁</div>
           </div>
-          <div className="coins-label">المتجر 🛒</div>
+          {['⭐','🪙','🎮','📚','🎯','🏅','💎','🍭','🎨','🎭','🎪','🎲'].map((e,i) =>
+            <div key={i} className={`gift-item gi${i}`}>{e}</div>
+          )}
+          {[...Array(8)].map((_,i) => <div key={i} className={`gift-spark gsp${i}`} />)}
+          <div className="gift-text">🎁 فتح الهدية!</div>
+          <div className="anim-label">المتجر 🛒</div>
         </div>
       )}
       {anim.type === 'trophy' && (
-        <div className="anim-scene anim-trophy-light">
-          <div className="trophy-glow-bg" />
-          <div className="trophy-main">🏆</div>
-          {[...Array(12)].map((_,i) => <div key={i} className={`trophy-ray-l trl${i}`} />)}
-          <div className="trophy-medals">
-            <div className="tm tm1">🥇</div>
-            <div className="tm tm2">🥈</div>
-            <div className="tm tm3">🥉</div>
-          </div>
-          <div className="trophy-label">الصدارة 🏆</div>
+        <div className="anim-scene anim-num1">
+          <div className="num1-bg" />
+          {[...Array(18)].map((_,i) => <div key={i} className={`num1-star ns${i}`}>⭐</div>)}
+          <div className="num1-digit">1</div>
+          <div className="num1-crown">👑</div>
+          {[...Array(6)].map((_,i) => <div key={i} className={`num1-ray nr${i}`} />)}
+          <div className="num1-text">أنت الأول! 🌟</div>
+          <div className="anim-label">الصدارة 🏆</div>
         </div>
       )}
     </div>
@@ -94,36 +98,29 @@ function App() {
   const [cardAnim, setCardAnim] = useState(null);
 
   useEffect(() => {
+    // لو في logout حصل للتو — متحمّلش أي session
+    if (localStorage.getItem('justLoggedOut')) {
+      localStorage.removeItem('justLoggedOut');
+      setLoading(false);
+      return;
+    }
+
+    const userData = localStorage.getItem('churchQuestUser');
+    if (!userData) {
+      setLoading(false);
+      return;
+    }
+
+    // في بيانات محفوظة — تأكد إن الـ session نشطة ونفس الإيميل
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        // مفيش session نشطة — امسح أي بيانات قديمة
-        localStorage.removeItem('churchQuestUser');
+      const saved = JSON.parse(userData);
+      if (!session || session.user.email !== saved.email) {
+        localStorage.clear();
         setLoading(false);
         return;
       }
-      // في session نشطة — جيب بيانات المستخدم من localStorage أو من DB
-      const userData = localStorage.getItem('churchQuestUser');
-      if (userData) {
-        const saved = JSON.parse(userData);
-        if (saved.email === session.user.email) {
-          setUser(saved);
-          setLoading(false);
-          return;
-        }
-      }
-      // مفيش بيانات محفوظة أو إيميل مختلف — جيب من DB
-      supabase.from('users').select('*, students(*)')
-        .eq('email', session.user.email).maybeSingle()
-        .then(({ data }) => {
-          if (data) {
-            const loginData = { id: data.id, email: data.email, role: data.role, student: data.students };
-            setUser(loginData);
-            localStorage.setItem('churchQuestUser', JSON.stringify(loginData));
-          } else {
-            localStorage.removeItem('churchQuestUser');
-          }
-          setLoading(false);
-        });
+      setUser(saved);
+      setLoading(false);
     });
   }, []);
 
@@ -133,8 +130,13 @@ function App() {
   };
 
   const handleLogout = async () => {
-    localStorage.removeItem('churchQuestUser');
-    await supabase.auth.signOut();
+    // امسح كل حاجة الأول
+    localStorage.clear();
+    sessionStorage.clear();
+    // بعدين اعمل signOut
+    await supabase.auth.signOut({ scope: 'global' });
+    // حط flag عشان الـ useEffect يعرف إنه logout مش session عادية
+    localStorage.setItem('justLoggedOut', '1');
     window.location.href = '/login';
   };
 
@@ -152,9 +154,9 @@ function App() {
 
   if (loading) {
     return (
-      <div className="loading-screen">
-        <div className="loading-spinner"></div>
-        <p>جاري التحميل...</p>
+      <div className="global-loading">
+        <div className="gl-cross"><div className="gl-v" /><div className="gl-h" /></div>
+        <p className="gl-text">جاري التحميل...</p>
       </div>
     );
   }
