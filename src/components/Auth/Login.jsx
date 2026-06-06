@@ -6,9 +6,10 @@ import './Login.css';
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loading,  setLoading]  = useState(false);
-  const [error,    setError]    = useState('');
-  const [showPass, setShowPass] = useState(false);
+  const [loading,   setLoading]  = useState(false);
+  const [error,     setError]    = useState('');
+  const [showPass,  setShowPass] = useState(false);
+  const [showAnim,  setShowAnim] = useState(false);
 
   useEffect(() => { if (error) setError(''); }, [username, password]);
 
@@ -61,7 +62,10 @@ function Login({ onLogin }) {
       };
 
       console.log('✅ Login successful:', loginData.email);
-      onLogin(loginData);
+      // شغّل أنيميشن الباب الأول، وبعدين روح للداشبورد
+      setLoading(false);
+      setShowAnim(true);
+      setTimeout(() => onLogin(loginData), 2000);
 
     } catch (err) {
       console.error('Login error:', err);
@@ -83,6 +87,17 @@ function Login({ onLogin }) {
   return (
     <div className="login-page">
       <div className="stars" />
+
+      {/* Login Door Animation */}
+      {showAnim && (
+        <div className="login-door-overlay">
+          <div className="ld-door ld-door-left" />
+          <div className="ld-door ld-door-right" />
+          <div className="ld-light" />
+          <div className="ld-cross">✝</div>
+          {[...Array(10)].map((_,i) => <div key={i} className={`ld-spark lsp${i}`} />)}
+        </div>
+      )}
 
       <div className="login-container">
         <div className="logo-container">
@@ -144,7 +159,11 @@ function Login({ onLogin }) {
             className="btn-primary"
             disabled={loading || !username || !password}
           >
-            {loading ? '⏳ جاري التحقق...' : '🚀 دخول'}
+            {loading ? (
+              <span className="btn-cross-loader">
+                <span className="bcl-v" /><span className="bcl-h" />
+              </span>
+            ) : '🚀 دخول'}
           </button>
 
           <div className="demo-accounts">
@@ -160,6 +179,18 @@ function Login({ onLogin }) {
           </div>
         </form>
       </div>
+
+      {/* Cross Loading Overlay */}
+      {loading && (
+        <div className="login-loading-overlay">
+          <div className="llo-cross">
+            <div className="llo-v" />
+            <div className="llo-h" />
+            <div className="llo-center" />
+          </div>
+          <p className="llo-text">جاري التحقق...</p>
+        </div>
+      )}
     </div>
   );
 }

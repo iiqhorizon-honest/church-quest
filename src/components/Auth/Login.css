@@ -197,3 +197,188 @@
   .login-page .game-title { font-size: 1.6rem; letter-spacing: 2px; }
   .login-page .logo-icon  { font-size: 2.8rem; }
 }
+
+
+/* ══════════════════════════════════════════
+   CROSS LOADING OVERLAY
+══════════════════════════════════════════ */
+.login-loading-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(5, 0, 15, 0.85);
+  backdrop-filter: blur(6px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1.5rem;
+  animation: llo-in 0.2s ease-out;
+}
+@keyframes llo-in { from{opacity:0} to{opacity:1} }
+
+.llo-cross {
+  position: relative;
+  width: 70px; height: 90px;
+  animation: llo-pulse 1s ease-in-out infinite alternate;
+}
+@keyframes llo-pulse {
+  from { transform: scale(0.92); filter: drop-shadow(0 0 10px rgba(245,200,66,0.5)); }
+  to   { transform: scale(1.08); filter: drop-shadow(0 0 24px rgba(245,200,66,0.9)); }
+}
+
+.llo-v {
+  position: absolute;
+  left: 50%; top: 0;
+  transform: translateX(-50%);
+  width: 16px; height: 100%;
+  background: linear-gradient(180deg, transparent 0%, #c4b5fd 10%, #fff 40%, #f5c842 70%, transparent 100%);
+  border-radius: 8px;
+}
+.llo-h {
+  position: absolute;
+  left: 0; top: 33%;
+  width: 100%; height: 16px;
+  background: linear-gradient(90deg, transparent 0%, #c4b5fd 10%, #fff 40%, #f5c842 70%, transparent 100%);
+  border-radius: 8px;
+}
+.llo-center {
+  position: absolute;
+  left: 50%; top: 33%;
+  transform: translate(-50%, 0);
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, #f5c842 50%, transparent 100%);
+  box-shadow: 0 0 16px #f5c842, 0 0 32px rgba(245,200,66,0.5);
+  animation: llo-center-pulse 0.6s ease-in-out infinite alternate;
+}
+@keyframes llo-center-pulse {
+  from { transform: translate(-50%, 0) scale(1);   opacity: 0.8; }
+  to   { transform: translate(-50%, 0) scale(1.4); opacity: 1; }
+}
+
+.llo-text {
+  color: rgba(245,200,66,0.8);
+  font-family: 'Cairo', sans-serif;
+  font-size: 1rem; font-weight: 700;
+  letter-spacing: 1px;
+  animation: llo-text-blink 1s ease-in-out infinite alternate;
+}
+@keyframes llo-text-blink {
+  from { opacity: 0.5; }
+  to   { opacity: 1; }
+}
+
+/* زرار الـ loading */
+.btn-cross-loader {
+  display: inline-flex; align-items: center; justify-content: center;
+  position: relative; width: 28px; height: 36px;
+}
+.bcl-v {
+  position: absolute;
+  left: 50%; top: 0; transform: translateX(-50%);
+  width: 5px; height: 100%;
+  background: #1a0e00; border-radius: 3px;
+}
+.bcl-h {
+  position: absolute;
+  left: 0; top: 33%;
+  width: 100%; height: 5px;
+  background: #1a0e00; border-radius: 3px;
+}
+
+
+/* ══════════════════════════════════════════════════
+   LOGIN DOOR ANIMATION
+══════════════════════════════════════════════════ */
+.login-door-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: all;
+  overflow: hidden;
+}
+
+/* نصين الباب */
+.ld-door {
+  position: absolute; top: 0; bottom: 0;
+  width: 50%;
+  background: linear-gradient(135deg, #0a001a 0%, #1a0a2e 40%, #2d1b4e 100%);
+  transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+  animation: door-open 1.2s cubic-bezier(0.7, 0, 0.3, 1) 0.3s forwards;
+}
+.ld-door-left  {
+  left: 0;
+  border-right: 2px solid rgba(163,113,247,0.5);
+  transform-origin: left center;
+  animation-name: door-left-open;
+}
+.ld-door-right {
+  right: 0;
+  border-left: 2px solid rgba(163,113,247,0.5);
+  transform-origin: right center;
+  animation-name: door-right-open;
+}
+
+@keyframes door-left-open {
+  0%   { transform: perspective(1200px) rotateY(0deg);    opacity: 1; }
+  70%  { transform: perspective(1200px) rotateY(-88deg);  opacity: 1; }
+  100% { transform: perspective(1200px) rotateY(-90deg);  opacity: 0; }
+}
+@keyframes door-right-open {
+  0%   { transform: perspective(1200px) rotateY(0deg);   opacity: 1; }
+  70%  { transform: perspective(1200px) rotateY(88deg);  opacity: 1; }
+  100% { transform: perspective(1200px) rotateY(90deg);  opacity: 0; }
+}
+
+/* نور بيخرج من وسط الباب */
+.ld-light {
+  position: absolute; top: 0; bottom: 0;
+  left: 50%; transform: translateX(-50%);
+  width: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(163,113,247,0.3) 20%,
+    rgba(251,191,36,0.6) 50%,
+    rgba(163,113,247,0.3) 80%,
+    transparent 100%
+  );
+  animation: light-expand 1.2s ease-out 0.3s forwards;
+}
+@keyframes light-expand {
+  0%   { width: 0;    opacity: 0; }
+  30%  { width: 20px; opacity: 1; }
+  100% { width: 100vw; opacity: 0.8; }
+}
+
+/* صليب في المنتصف */
+.ld-cross {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  font-size: 5rem; color: #fbbf24;
+  text-shadow: 0 0 30px #fbbf24, 0 0 60px rgba(251,191,36,0.5);
+  animation: cross-pop 0.6s cubic-bezier(0.2,0.8,0.2,1.3) 0.8s both,
+             cross-fade 0.4s ease-in 1.6s forwards;
+  z-index: 2;
+}
+@keyframes cross-pop {
+  from { transform: translate(-50%,-50%) scale(0) rotate(-20deg); opacity:0; }
+  to   { transform: translate(-50%,-50%) scale(1) rotate(0deg);   opacity:1; }
+}
+@keyframes cross-fade {
+  to { transform: translate(-50%,-50%) scale(2); opacity:0; }
+}
+
+/* شرارات نور */
+.ld-spark {
+  position: absolute; border-radius: 50%; opacity: 0;
+  top: 50%; left: 50%;
+  animation: ld-spark-fly 0.8s ease-out forwards;
+}
+.lsp0{width:8px;height:8px;background:#fbbf24;animation-delay:0.9s;--lx:-80px;--ly:-60px}
+.lsp1{width:5px;height:5px;background:#fff;animation-delay:0.95s;--lx:80px;--ly:-70px}
+.lsp2{width:7px;height:7px;background:#c4b5fd;animation-delay:1.0s;--lx:-100px;--ly:20px}
+.lsp3{width:4px;height:4px;background:#fbbf24;animation-delay:0.85s;--lx:100px;--ly:30px}
+.lsp4{width:9px;height:9px;background:#fff;animation-delay:1.05s;--lx:0;--ly:-100px}
+.lsp5{width:5px;height:5px;background:#a78bfa;animation-delay:0.9s;--lx:-60px;--ly:80px}
+.lsp6{width:6px;height:6px;background:#fbbf24;animation-delay:1.0s;--lx:60px;--ly:90px}
+.lsp7{width:4px;height:4px;background:#fff;animation-delay:0.95s;--lx:-120px;--ly:-40px}
+.lsp8{width:7px;height:7px;background:#c4b5fd;animation-delay:1.1s;--lx:110px;--ly:-50px}
+.lsp9{width:5px;height:5px;background:#fbbf24;animation-delay:1.05s;--lx:0;--ly:110px}
+@keyframes ld-spark-fly {
+  0%  { opacity:1; transform:translate(-50%,-50%) scale(0.5); }
+  100%{ opacity:0; transform:translate(calc(-50% + var(--lx)), calc(-50% + var(--ly))) scale(1.5); }
+}
