@@ -789,3 +789,67 @@
   border: 2px solid var(--purple) !important;
   border-radius: 10px !important;
 }
+
+/* ============================================
+   DATE BROWSER & CHIPS (NEW ADDITIONS)
+   ============================================ */
+
+.date-browser-section-smart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.date-chips-smart {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip-smart {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.chip-smart:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.chip-smart.active {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.4);
+}
+
+.date-picker-row-smart {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.date-input-smart,
+.activity-filter-smart {
+  flex: 1;
+  min-width: 140px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.date-input-smart:focus,
+.activity-filter-smart:focus {
+  border-color: #7c3aed;
+}
